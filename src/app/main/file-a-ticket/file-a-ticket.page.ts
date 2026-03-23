@@ -1,5 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
+export interface Ticket {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  status: 'Pending' | 'In Progress' | 'Resolved';
+}
+
 @Component({
   selector: 'app-file-a-ticket',
   templateUrl: './file-a-ticket.page.html',
@@ -13,8 +21,29 @@ export class FileATicketPage implements OnInit {
   activeSegment: string = 'my-tickets';
   activeFilter: string = 'All';
 
+  tickets: Ticket[] = [];
+
   selectedFiles: File[] = [];
   isDragging = false;
+
+  newTicketType: string = '';
+  newTicketTopic: string = '';
+  newTicketDesc: string = '';
+  privacyChecked: boolean = false;
+
+  get filteredTickets() {
+    if (this.activeFilter === 'All') return this.tickets;
+    return this.tickets.filter(t => t.status === this.activeFilter);
+  }
+
+  get counts() {
+    return {
+      All: this.tickets.length,
+      Pending: this.tickets.filter(t => t.status === 'Pending').length,
+      'In Progress': this.tickets.filter(t => t.status === 'In Progress').length,
+      Resolved: this.tickets.filter(t => t.status === 'Resolved').length
+    };
+  }
 
   constructor() { }
 
@@ -66,6 +95,44 @@ export class FileATicketPage implements OnInit {
 
   removeFile(index: number) {
     this.selectedFiles.splice(index, 1);
+  }
+
+  submitTicket() {
+    if (!this.newTicketTopic || !this.newTicketDesc || !this.privacyChecked) return;
+
+    // Convert topics to readable titles
+    const topicMap: any = {
+      'maintenance': 'Maintenance Issue',
+      'billing': 'Billing Inquiry',
+      'amenity': 'Amenity Request',
+      'security': 'Security Concern',
+      'other': 'Other Request'
+    };
+
+    const newTicket: Ticket = {
+      id: 'TKT-' + Math.floor(Math.random() * 1000).toString().padStart(3, '0'),
+      title: topicMap[this.newTicketTopic] || this.newTicketTopic,
+      description: this.newTicketDesc,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      status: 'Pending'
+    };
+
+    // Insert at front of array
+    this.tickets.unshift(newTicket);
+
+    // Reset and return to feed
+    this.cancelTicket();
+  }
+
+  cancelTicket() {
+    this.newTicketType = '';
+    this.newTicketTopic = '';
+    this.newTicketDesc = '';
+    this.privacyChecked = false;
+    this.selectedFiles = [];
+    
+    this.activeSegment = 'my-tickets';
+    this.activeFilter = 'All';
   }
 
 }

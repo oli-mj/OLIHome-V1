@@ -47,10 +47,12 @@
       <div class="modal-content">
         <h2 class="ion-text-center">Change Password</h2>
         <ion-item lines="none">
-          <ion-input label="Current Password" labelPlacement="floating" type="password" placeholder="Enter current password"></ion-input>
+          <ion-input label="Current Password" labelPlacement="floating" type="password"
+            placeholder="Enter current password"></ion-input>
         </ion-item>
         <ion-item lines="none">
-          <ion-input label="New Password" labelPlacement="floating" type="password" placeholder="Enter new password"></ion-input>
+          <ion-input label="New Password" labelPlacement="floating" type="password"
+            placeholder="Enter new password"></ion-input>
         </ion-item>
         <div class="ion-padding ion-text-center">
           <ion-button (click)="passwordModal.dismiss()" expand="block" shape="round">Update</ion-button>
@@ -63,9 +65,10 @@
     <ng-template>
       <div class="modal-content ion-text-center">
         <h2>Help & Support</h2>
-        <p>If you need assistance, please contact the admin team at <br><strong>admin@olihome.com</strong></p>
+        <p>If you need assistance, please contact the admin team at <br><strong>info@ovialand.com</strong></p>
         <div class="ion-padding">
-          <ion-button (click)="helpModal.dismiss()" expand="block" shape="round" color="primary">Contact Admin</ion-button>
+          <ion-button (click)="helpModal.dismiss()" expand="block" shape="round" color="primary">Contact
+            Admin</ion-button>
         </div>
       </div>
     </ng-template>
@@ -81,7 +84,7 @@
     <ng-template>
       <div class="modal-content ion-text-center">
         <h2>Update Profile Picture</h2>
-        
+
         <div class="ion-padding-bottom">
           <ion-button expand="block" fill="solid" shape="round" color="primary" (click)="triggerFileInput()">
             <ion-icon slot="start" class="fa-solid fa-upload"></ion-icon>
@@ -90,14 +93,15 @@
         </div>
 
         <p class="ion-margin-top" style="color: var(--ion-color-medium); font-size: 0.9rem;">Or choose an avatar</p>
-        
+
         <div class="avatar-grid">
           <ion-avatar *ngFor="let avatar of availableAvatars" (click)="selectAvatar(avatar)" class="selectable-avatar">
             <img [src]="avatar" />
           </ion-avatar>
         </div>
         <div class="ion-padding-top">
-          <ion-button (click)="isProfileModalOpen = false" expand="block" shape="round" fill="outline">Cancel</ion-button>
+          <ion-button (click)="isProfileModalOpen = false" expand="block" shape="round"
+            fill="outline">Cancel</ion-button>
         </div>
       </div>
     </ng-template>

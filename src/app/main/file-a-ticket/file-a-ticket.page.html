@@ -31,55 +31,34 @@
     <h2 class="tickets-title">My Tickets</h2>
     <!-- Filter chips -->
     <div class="filter-chips">
-      <button class="chip" [class.active]="activeFilter === 'All'" (click)="setFilter('All')">All <span class="chip-count">4</span></button>
-      <button class="chip" [class.active]="activeFilter === 'Pending'" (click)="setFilter('Pending')">Pending <span class="chip-count">1</span></button>
-      <button class="chip" [class.active]="activeFilter === 'In Progress'" (click)="setFilter('In Progress')">In Progress <span class="chip-count">1</span></button>
-      <button class="chip" [class.active]="activeFilter === 'Resolved'" (click)="setFilter('Resolved')">Resolved <span class="chip-count">2</span></button>
+      <button class="chip" [class.active]="activeFilter === 'All'" (click)="setFilter('All')">All <span class="chip-count">{{ counts.All }}</span></button>
+      <button class="chip" [class.active]="activeFilter === 'Pending'" (click)="setFilter('Pending')">Pending <span class="chip-count">{{ counts.Pending }}</span></button>
+      <button class="chip" [class.active]="activeFilter === 'In Progress'" (click)="setFilter('In Progress')">In Progress <span class="chip-count">{{ counts['In Progress'] }}</span></button>
+      <button class="chip" [class.active]="activeFilter === 'Resolved'" (click)="setFilter('Resolved')">Resolved <span class="chip-count">{{ counts.Resolved }}</span></button>
+    </div>
+
+    <!-- Empty State Placeholder -->
+    <div *ngIf="filteredTickets.length === 0" class="ion-text-center ion-padding" style="margin-top: 40px;">
+      <ion-icon class="fa-solid fa-rectangle-list" style="font-size: 54px; color: #d1d5db; margin-bottom: 10px;"></ion-icon>
+      <h3 style="color: #6b7280; font-weight: 600; margin: 0 0 5px 0;">No Tickets Found</h3>
+      <p style="color: #9ca3af; font-size: 14px; margin: 0;">Real tickets and their status will appear here.</p>
     </div>
 
     <!-- Ticket cards -->
-    <div class="ticket-list">
-      <div class="ticket-card" *ngIf="activeFilter === 'All' || activeFilter === 'In Progress'">
+    <div class="ticket-list" *ngIf="filteredTickets.length > 0">
+      <div class="ticket-card" *ngFor="let ticket of filteredTickets">
         <div class="ticket-card-top">
           <div class="ticket-info">
-            <h3 class="ticket-title">Leaking Faucet</h3>
-            <p class="ticket-desc">Kitchen sink faucet dripping continuously.</p>
-            <p class="ticket-meta">TKT-001 | Mar 8, 2026</p>
+            <h3 class="ticket-title">{{ ticket.title }}</h3>
+            <p class="ticket-desc">{{ ticket.description }}</p>
+            <p class="ticket-meta">{{ ticket.id }} | {{ ticket.date }}</p>
           </div>
-          <span class="ticket-badge in-progress">In Progress</span>
-        </div>
-      </div>
-
-      <div class="ticket-card" *ngIf="activeFilter === 'All' || activeFilter === 'Pending'">
-        <div class="ticket-card-top">
-          <div class="ticket-info">
-            <h3 class="ticket-title">Broken Door Hinge</h3>
-            <p class="ticket-desc">Main door hinge is loose and squeaking.</p>
-            <p class="ticket-meta">TKT-002 | Mar 5, 2026</p>
-          </div>
-          <span class="ticket-badge pending">Pending</span>
-        </div>
-      </div>
-
-      <div class="ticket-card" *ngIf="activeFilter === 'All' || activeFilter === 'Resolved'">
-        <div class="ticket-card-top">
-          <div class="ticket-info">
-            <h3 class="ticket-title">AC Unit Not Cooling</h3>
-            <p class="ticket-desc">Air-conditioning unit stopped cooling properly.</p>
-            <p class="ticket-meta">TKT-003 | Feb 28, 2026</p>
-          </div>
-          <span class="ticket-badge resolved">Resolved</span>
-        </div>
-      </div>
-
-      <div class="ticket-card" *ngIf="activeFilter === 'All' || activeFilter === 'Resolved'">
-        <div class="ticket-card-top">
-          <div class="ticket-info">
-            <h3 class="ticket-title">Clogged Drain</h3>
-            <p class="ticket-desc">Bathroom floor drain is slow to drain.</p>
-            <p class="ticket-meta">TKT-004 | Feb 20, 2026</p>
-          </div>
-          <span class="ticket-badge resolved">Resolved</span>
+           <span class="ticket-badge" 
+                 [class.pending]="ticket.status === 'Pending'"
+                 [class.in-progress]="ticket.status === 'In Progress'"
+                 [class.resolved]="ticket.status === 'Resolved'">
+             {{ ticket.status }}
+           </span>
         </div>
       </div>
     </div>
@@ -102,12 +81,12 @@
 
         <!-- Row 4: Type | Topic -->
         <div class="ct-row ct-row-2">
-          <ion-select fill="outline" label="Type" label-placement="floating" interface="alert" class="ct-input">
+          <ion-select fill="outline" label="Type" label-placement="floating" interface="alert" class="ct-input" [(ngModel)]="newTicketType" name="ticketType">
             <ion-select-option value="complaint">Complaint</ion-select-option>
             <ion-select-option value="request">Service Request</ion-select-option>
             <ion-select-option value="inquiry">Inquiry</ion-select-option>
           </ion-select>
-          <ion-select fill="outline" label="Topic" label-placement="floating" interface="alert" class="ct-input">
+          <ion-select fill="outline" label="Topic" label-placement="floating" interface="alert" class="ct-input" [(ngModel)]="newTicketTopic" name="ticketTopic">
             <ion-select-option value="maintenance">Maintenance</ion-select-option>
             <ion-select-option value="billing">Billing</ion-select-option>
             <ion-select-option value="amenity">Amenity</ion-select-option>
@@ -118,7 +97,7 @@
 
         <!-- Concern/Request Description -->
         <ion-textarea fill="outline" label="Concern/Request Description" label-placement="floating" rows="4"
-          class="ct-input ct-full"></ion-textarea>
+          class="ct-input ct-full" [(ngModel)]="newTicketDesc" name="ticketDesc"></ion-textarea>
 
 
         <!-- Attachments -->
@@ -155,7 +134,7 @@
 
         <!-- Privacy checkbox -->
         <div class="privacy-row">
-          <ion-checkbox class="privacy-check"></ion-checkbox>
+          <ion-checkbox class="privacy-check" [(ngModel)]="privacyChecked" name="privacyCheck"></ion-checkbox>
           <p class="privacy-text">
             By checking the box and submitting this ticket, you acknowledge that the personal information
             provided will be collected, used, and stored for the purpose of assessing and responding to
@@ -166,8 +145,8 @@
 
         <!-- Action buttons -->
         <div class="ct-actions">
-          <ion-button fill="solid" color="dark" shape="round" class="btn-cancel">Cancel</ion-button>
-          <ion-button fill="outline" color="green" shape="round" class="btn-submit">
+          <ion-button fill="solid" color="dark" shape="round" class="btn-cancel" (click)="cancelTicket()">Cancel</ion-button>
+          <ion-button fill="outline" color="green" shape="round" class="btn-submit" (click)="submitTicket()" [disabled]="!newTicketTopic || !newTicketDesc || !privacyChecked">
             <ion-icon class="fa-regular fa-paper-plane" slot="start"></ion-icon>
             Submit Ticket
           </ion-button>

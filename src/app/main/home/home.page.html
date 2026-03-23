@@ -8,8 +8,9 @@
         style="height: 50px; max-width: 200px; object-fit: contain; vertical-align: middle; margin-top: 3px;" />
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button class="header-icon-btn">
+      <ion-button class="header-icon-btn" id="notification-button" (click)="markNotificationsRead()">
         <ion-icon class="fa-solid fa-bell"></ion-icon>
+        <ion-badge color="danger" *ngIf="unreadNotifications > 0" class="notification-badge">{{ unreadNotifications }}</ion-badge>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -30,24 +31,19 @@
       </ion-item>
       
       <!-- Media Preview Area -->
-      <div *ngIf="newPostImage || newPostVideo" class="media-preview ion-padding-horizontal">
-        <div *ngIf="newPostImage" class="preview-item">
-          <img [src]="newPostImage" />
-          <ion-fab-button size="small" color="dark" class="close-btn" (click)="clearMedia()">
-            <ion-icon name="close"></ion-icon>
-          </ion-fab-button>
-        </div>
-        <div *ngIf="newPostVideo" class="preview-item">
-          <video [src]="newPostVideo" controls></video>
-          <ion-fab-button size="small" color="dark" class="close-btn" (click)="clearMedia()">
+      <div *ngIf="newPostMedia.length > 0" class="media-preview ion-padding-horizontal" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;">
+        <div *ngFor="let m of newPostMedia; let i = index" class="preview-item" style="flex: 0 0 auto;">
+          <img *ngIf="m.type === 'image'" [src]="getSafeUrl(m.url)" style="max-height: 120px; border-radius: 12px; object-fit: cover;" />
+          <video *ngIf="m.type === 'video'" [src]="getSafeResourceUrl(m.url)" controls style="max-height: 120px; border-radius: 12px; object-fit: cover;"></video>
+          <ion-fab-button size="small" color="dark" class="close-btn" (click)="removeMedia(i)">
             <ion-icon name="close"></ion-icon>
           </ion-fab-button>
         </div>
       </div>
 
       <!-- Hidden File Inputs -->
-      <input type="file" #imageInput (change)="onMediaSelected($event, 'image')" accept="image/*" style="display: none;" />
-      <input type="file" #videoInput (change)="onMediaSelected($event, 'video')" accept="video/*" style="display: none;" />
+      <input type="file" #imageInput (change)="onMediaSelected($event, 'image')" accept="image/*" multiple style="display: none;" />
+      <input type="file" #videoInput (change)="onMediaSelected($event, 'video')" accept="video/*" multiple style="display: none;" />
 
       <div class="post-actions-top">
         <div class="action-buttons">
@@ -58,7 +54,7 @@
             <ion-icon class="fa-solid fa-video" color="danger"></ion-icon>
           </ion-button>
         </div>
-        <ion-button fill="solid" color="primary" class="btn-post" shape="round" (click)="createPost()" [disabled]="!newPostContent.trim() && !newPostImage && !newPostVideo">
+        <ion-button fill="solid" color="primary" class="btn-post" shape="round" (click)="createPost()" [disabled]="!newPostContent.trim() && newPostMedia.length === 0">
           Post
         </ion-button>
       </div>
@@ -86,19 +82,67 @@
         </ion-button>
       </ion-item>
       
-      <div class="post-content" *ngIf="post.content">
+      <div class="post-content" *ngIf="post.content && !post.isEditingPost">
         {{ post.content }}
       </div>
-      
-      <div class="media-container" *ngIf="post.image || post.video">
-        <img *ngIf="post.image" [src]="post.image" alt="Post Image" class="post-media" />
-        
-        <div *ngIf="post.video" class="video-wrapper">
-          <video *ngIf="post.video.startsWith('data:')" [src]="post.video" controls class="post-media"></video>
-          <div *ngIf="!post.video.startsWith('data:')" class="placeholder-video">
-            <div class="video-overlay"><ion-icon class="fa-solid fa-play"></ion-icon></div>
-            <img [src]="post.video" alt="Video Placeholder" class="post-media" />
+
+      <!-- Editing Post Content -->
+      <div class="ion-padding-horizontal" *ngIf="post.isEditingPost" style="padding-bottom: 10px; padding-top: 5px;">
+        <ion-textarea autoGrow="true" [(ngModel)]="post.editedContent" style="background: #f3f4f6; border-radius: 12px; font-size: 15px; --padding-start: 12px; --padding-end: 12px; min-height: 60px; border: 1px solid #d1d5db; margin-bottom: 10px;"></ion-textarea>
+
+        <!-- Editable Media Grid -->
+        <div *ngIf="post.editedMedia && post.editedMedia.length > 0" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 8px;">
+          <div *ngFor="let m of post.editedMedia; let i = index" style="position: relative; flex: 0 0 auto;">
+            <img *ngIf="m.type === 'image'" [src]="getSafeUrl(m.url)" style="max-height: 100px; border-radius: 10px; object-fit: cover;" />
+            <video *ngIf="m.type === 'video'" [src]="getSafeResourceUrl(m.url)" style="max-height: 100px; border-radius: 10px; object-fit: cover;"></video>
+            <ion-fab-button size="small" color="danger" style="position: absolute; top: -8px; right: -8px; --width: 26px; --height: 26px;" (click)="removeEditMedia(post, i)">
+              <ion-icon name="close" style="font-size: 14px;"></ion-icon>
+            </ion-fab-button>
           </div>
+        </div>
+
+        <!-- Add Media Buttons during Edit -->
+        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+          <label style="display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #32893b; cursor: pointer;">
+            <ion-icon class="fa-solid fa-image"></ion-icon> Add Photo
+            <input type="file" accept="image/*" multiple style="display: none;" (change)="addMediaToEdit($event, post, 'image')" />
+          </label>
+          <label style="display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #ef4444; cursor: pointer;">
+            <ion-icon class="fa-solid fa-video"></ion-icon> Add Video
+            <input type="file" accept="video/*" multiple style="display: none;" (change)="addMediaToEdit($event, post, 'video')" />
+          </label>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <ion-button fill="clear" color="medium" size="small" (click)="cancelEditPost(post)" style="text-transform: none; font-weight: 600;">Cancel</ion-button>
+          <ion-button fill="solid" color="primary" size="small" shape="round" (click)="saveEditPost(post)" style="text-transform: none; font-weight: 600;">Save</ion-button>
+        </div>
+      </div>
+      
+      <!-- Media Carousel -->
+      <div class="media-container" *ngIf="post.media && post.media.length > 0">
+        <div class="media-carousel">
+          <ng-container *ngFor="let m of post.media">
+            <div class="carousel-slide">
+              <img *ngIf="m.type === 'image'" [src]="getSafeUrl(m.url)" alt="Post Image" class="post-media" />
+              <div *ngIf="m.type === 'video'" class="video-wrapper">
+                <video *ngIf="m.url.startsWith('data:')" [src]="getSafeResourceUrl(m.url)" controls class="post-media"></video>
+                <div *ngIf="!m.url.startsWith('data:')" class="placeholder-video">
+                  <div class="video-overlay"><ion-icon class="fa-solid fa-play"></ion-icon></div>
+                  <img [src]="getSafeUrl(m.url)" alt="Video Placeholder" class="post-media" />
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <!-- Dot Indicators -->
+        <div class="carousel-dots" *ngIf="post.media.length > 1">
+          <span class="dot" *ngFor="let m of post.media; let i = index"></span>
+        </div>
+        <!-- Image counter badge -->
+        <div *ngIf="post.media.length > 1" class="media-count-badge">
+          <ion-icon name="images-outline" style="font-size: 12px; margin-right: 3px;"></ion-icon>
+          {{ post.media.length }}
         </div>
       </div>
 
@@ -162,4 +206,30 @@
       </div>
     </ion-card>
   </div>
+
+  <!-- Notifications Popover -->
+  <ion-popover trigger="notification-button" triggerAction="click" alignment="bottom" side="bottom" cssClass="notification-popover" [dismissOnSelect]="true">
+    <ng-template>
+      <ion-content class="ion-no-padding">
+        <ion-list lines="full">
+          <ion-list-header style="min-height: 48px; border-bottom: 1px solid #f3f4f6;">
+            <ion-label style="font-weight: 700; font-size: 15px; color: #1f2937;">Notifications</ion-label>
+          </ion-list-header>
+          
+          <div *ngIf="notifications.length === 0" class="ion-padding ion-text-center">
+            <p style="color: #9ca3af; font-size: 13px; margin: 0;">No new notifications.</p>
+          </div>
+
+          <ion-item *ngFor="let notif of notifications" style="--background: transparent; cursor: pointer; --min-height: 60px;">
+            <ion-icon [name]="notif.icon" slot="start" [color]="notif.color" style="margin-top: 12px; align-self: flex-start; font-size: 22px;"></ion-icon>
+            <ion-label class="ion-text-wrap" style="margin-top: 10px; margin-bottom: 10px;">
+              <h3 style="font-weight: 500; font-size: 13px; color: #1f2937; line-height: 1.4;">{{ notif.title }}</h3>
+              <p style="font-size: 11px; color: #9ca3af; margin-top: 4px; font-weight: 500;">{{ notif.time }}</p>
+            </ion-label>
+            <div *ngIf="!notif.read" slot="end" style="width: 8px; height: 8px; border-radius: 50%; background: var(--ion-color-primary); margin-top: 14px; align-self: flex-start;"></div>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
 </ion-content>
