@@ -1,11 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
 import { ProfileSettingsPageRoutingModule } from './profile-settings-routing.module';
-
 import { ProfileSettingsPage } from './profile-settings.page';
 
 @NgModule({
@@ -17,4 +14,4 @@ import { ProfileSettingsPage } from './profile-settings.page';
   ],
   declarations: [ProfileSettingsPage]
 })
-export class ProfileSettingsPageModule {}
+export class ProfileSettingsPageModule { }

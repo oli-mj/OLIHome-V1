@@ -13,51 +13,32 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  private async getHeaders(): Promise<HttpHeaders> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    });
-
-    const { value: token } = await Preferences.get({ key: 'authToken' });
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-
-    return headers;
-  }
-
-  async get<T>(endpoint: string, params?: HttpParams): Promise<Observable<T>> {
-    const headers = await this.getHeaders();
-    return this.http.get<T>(`${this.apiUrl}${endpoint}`, { headers, params }).pipe(
+  get<T>(endpoint: string, params?: HttpParams): Observable<T> {
+    return this.http.get<T>(`${this.apiUrl}${endpoint}`, { params }).pipe(
       catchError(this.handleError)
     );
   }
 
-  async post<T>(endpoint: string, data: any): Promise<Observable<T>> {
-    const headers = await this.getHeaders();
-    return this.http.post<T>(`${this.apiUrl}${endpoint}`, data, { headers }).pipe(
+  post<T>(endpoint: string, data: any): Observable<T> {
+    return this.http.post<T>(`${this.apiUrl}${endpoint}`, data).pipe(
       catchError(this.handleError)
     );
   }
 
-  async put<T>(endpoint: string, data: any): Promise<Observable<T>> {
-    const headers = await this.getHeaders();
-    return this.http.put<T>(`${this.apiUrl}${endpoint}`, data, { headers }).pipe(
+  put<T>(endpoint: string, data: any): Observable<T> {
+    return this.http.put<T>(`${this.apiUrl}${endpoint}`, data).pipe(
       catchError(this.handleError)
     );
   }
 
-  async delete<T>(endpoint: string): Promise<Observable<T>> {
-    const headers = await this.getHeaders();
-    return this.http.delete<T>(`${this.apiUrl}${endpoint}`, { headers }).pipe(
+  delete<T>(endpoint: string): Observable<T> {
+    return this.http.delete<T>(`${this.apiUrl}${endpoint}`).pipe(
       catchError(this.handleError)
     );
   }
 
   private handleError(error: any) {
     console.error('API Error:', error);
-    // You can customize error handling/messaging here
     return throwError(() => new Error(error.message || 'Server Error'));
   }
 }
