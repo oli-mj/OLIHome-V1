@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Preferences } from '@capacitor/preferences';
 import { BiometricAuth, BiometryError, BiometryErrorType } from '@aparajita/capacitor-biometric-auth';
-
 import { AuthService } from '../services/auth/auth.service';
 
 @Component({

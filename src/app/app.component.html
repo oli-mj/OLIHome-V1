@@ -38,10 +38,9 @@
         </ion-list>
       </ion-content>
 
-      <!-- Log Out Button at the Bottom -->
       <ion-footer>
         <ion-menu-toggle auto-hide="false">
-          <ion-item routerLink="/login" routerDirection="root" lines="none" class="ion-margin-bottom logout-btn">
+          <ion-item (click)="logout()" lines="none" class="ion-margin-bottom logout-btn" detail="false" button>
             <ion-icon slot="start" class="fa-solid fa-arrow-right-from-bracket" color="danger"></ion-icon>
             <ion-label color="danger">Log Out</ion-label>
           </ion-item>
