@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar class="home-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button class="header-icon-btn"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Community Living</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding feed-bg">
+  <div class="header-section ion-margin-bottom">
+    <h2>Community Tools</h2>
+    <p>Everything you need for your living space.</p>
+  </div>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="action-card" routerLink="book-amenity">
+          <ion-icon class="fa-solid fa-calendar-check" color="primary"></ion-icon>
+          <h3>Book Amenity</h3>
+          <p>Pool, Gym, Clubhouse</p>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col size="6">
+        <ion-card class="action-card" routerLink="announcements">
+          <ion-icon class="fa-solid fa-bullhorn" color="warning"></ion-icon>
+          <h3>Announcements</h3>
+          <p>Notices from Admin</p>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card class="action-card" routerLink="pay-dues">
+          <ion-icon class="fa-solid fa-file-invoice-dollar" color="success"></ion-icon>
+          <h3>Pay Dues</h3>
+          <p>HOA & Maintenance</p>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card class="action-card" routerLink="handbook">
+          <ion-icon class="fa-solid fa-book" color="tertiary"></ion-icon>
+          <h3>Handbook</h3>
+          <p>Community Rules</p>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

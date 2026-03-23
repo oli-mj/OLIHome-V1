@@ -1,0 +1,217 @@
+.home-toolbar {
+  --background: #ffffff;
+  --color: #32893b;
+  --border-width: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+  z-index: 10;
+}
+
+.header-icon-btn {
+  --color: #32893b;
+
+  ion-icon {
+    color: #32893b;
+  }
+}
+
+.feed-bg {
+  --background: #f8f9fc;
+}
+
+.feed-container {
+  padding: 16px 12px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Base Card Style for modern look */
+ion-card.create-post-card, ion-card.feed-post {
+  margin: 0 0 20px 0;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
+  background: #ffffff;
+}
+
+.create-post-card {
+  padding: 15px 10px 5px 10px;
+
+  .post-header-item {
+    --inner-padding-end: 0;
+  }
+
+  .post-input {
+    background: #f3f4f6;
+    border-radius: 24px;
+    padding-left: 20px !important;
+    --padding-start: 20px;
+    font-size: 15px;
+    height: 48px;
+    margin-left: 10px;
+  }
+
+  .preview-item {
+    position: relative;
+    display: inline-block;
+    margin-top: 10px;
+    
+    img, video {
+      max-height: 200px;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 32px;
+      height: 32px;
+      --box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+  }
+
+  .post-actions-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px 5px 5px;
+    margin-top: 10px;
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .media-btn {
+      margin: 0;
+      --padding-start: 10px;
+      --padding-end: 10px;
+      background: #f3f4f6;
+      border-radius: 50%;
+      height: 40px;
+      width: 40px;
+      
+      ion-icon {
+        font-size: 1.2rem;
+      }
+    }
+
+    .btn-post {
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      --padding-start: 24px;
+      --padding-end: 24px;
+    }
+  }
+}
+
+.feed-post {
+  .post-header {
+    --inner-padding-end: 0;
+    padding-top: 5px;
+    
+    .author {
+      font-weight: 700;
+      color: #1f2937;
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+
+    .time {
+      font-size: 12px;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    .more-btn {
+      margin: 0;
+      --padding-end: 0;
+      ion-icon {
+        font-size: 18px;
+        color: #9ca3af;
+      }
+    }
+  }
+
+  .post-content {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #4b5563;
+    padding: 5px 20px 15px 20px;
+  }
+
+  .media-container {
+    padding: 0 16px;
+    
+    .post-media {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      display: block;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .video-wrapper, .placeholder-video {
+      position: relative;
+    }
+    
+    .video-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+      ion-icon {
+        font-size: 24px;
+        color: #1f2937;
+        margin-left: 4px; /* visually center play button */
+      }
+    }
+  }
+
+  .post-actions-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px 16px 16px;
+
+    .start-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .action-btn {
+      margin: 0;
+      --padding-start: 8px;
+      --padding-end: 8px;
+      --color: #6b7280;
+      height: 36px;
+      
+      ion-icon {
+        font-size: 20px;
+        margin-right: 6px;
+        transition: transform 0.2s ease;
+      }
+      
+      &:active ion-icon {
+        transform: scale(0.85);
+      }
+
+      .count {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+    }
+  }
+}

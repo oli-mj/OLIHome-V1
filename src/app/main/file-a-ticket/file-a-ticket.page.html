@@ -1,0 +1,178 @@
+<ion-header>
+  <ion-toolbar class="home-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button class="header-icon-btn"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>File a Ticket</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="header-icon-btn">
+        <ion-icon class="fa-solid fa-bell"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Segment tabs -->
+  <ion-toolbar class="segment-toolbar">
+    <ion-segment [(ngModel)]="activeSegment" (ionChange)="onSegmentChange($event)" value="my-tickets">
+      <ion-segment-button value="my-tickets">
+        <ion-label>My Tickets</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="submit">
+        <ion-label>Submit</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <!-- ===== MY TICKETS TAB ===== -->
+  <div *ngIf="activeSegment === 'my-tickets'" class="tickets-tab">
+    <!-- Header row -->
+    <h2 class="tickets-title">My Tickets</h2>
+    <!-- Filter chips -->
+    <div class="filter-chips">
+      <button class="chip" [class.active]="activeFilter === 'All'" (click)="setFilter('All')">All <span class="chip-count">4</span></button>
+      <button class="chip" [class.active]="activeFilter === 'Pending'" (click)="setFilter('Pending')">Pending <span class="chip-count">1</span></button>
+      <button class="chip" [class.active]="activeFilter === 'In Progress'" (click)="setFilter('In Progress')">In Progress <span class="chip-count">1</span></button>
+      <button class="chip" [class.active]="activeFilter === 'Resolved'" (click)="setFilter('Resolved')">Resolved <span class="chip-count">2</span></button>
+    </div>
+
+    <!-- Ticket cards -->
+    <div class="ticket-list">
+      <div class="ticket-card" *ngIf="activeFilter === 'All' || activeFilter === 'In Progress'">
+        <div class="ticket-card-top">
+          <div class="ticket-info">
+            <h3 class="ticket-title">Leaking Faucet</h3>
+            <p class="ticket-desc">Kitchen sink faucet dripping continuously.</p>
+            <p class="ticket-meta">TKT-001 | Mar 8, 2026</p>
+          </div>
+          <span class="ticket-badge in-progress">In Progress</span>
+        </div>
+      </div>
+
+      <div class="ticket-card" *ngIf="activeFilter === 'All' || activeFilter === 'Pending'">
+        <div class="ticket-card-top">
+          <div class="ticket-info">
+            <h3 class="ticket-title">Broken Door Hinge</h3>
+            <p class="ticket-desc">Main door hinge is loose and squeaking.</p>
+            <p class="ticket-meta">TKT-002 | Mar 5, 2026</p>
+          </div>
+          <span class="ticket-badge pending">Pending</span>
+        </div>
+      </div>
+
+      <div class="ticket-card" *ngIf="activeFilter === 'All' || activeFilter === 'Resolved'">
+        <div class="ticket-card-top">
+          <div class="ticket-info">
+            <h3 class="ticket-title">AC Unit Not Cooling</h3>
+            <p class="ticket-desc">Air-conditioning unit stopped cooling properly.</p>
+            <p class="ticket-meta">TKT-003 | Feb 28, 2026</p>
+          </div>
+          <span class="ticket-badge resolved">Resolved</span>
+        </div>
+      </div>
+
+      <div class="ticket-card" *ngIf="activeFilter === 'All' || activeFilter === 'Resolved'">
+        <div class="ticket-card-top">
+          <div class="ticket-info">
+            <h3 class="ticket-title">Clogged Drain</h3>
+            <p class="ticket-desc">Bathroom floor drain is slow to drain.</p>
+            <p class="ticket-meta">TKT-004 | Feb 20, 2026</p>
+          </div>
+          <span class="ticket-badge resolved">Resolved</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SUBMIT TICKET TAB ===== -->
+  <div *ngIf="activeSegment === 'submit'" class="submit-tab">
+    <!-- Form card -->
+    <div class="create-ticket-card">
+      <p class="form-intro">
+        Create a service ticket to request assistance, report concerns, or follow up on your account.
+        Our <span class="green-text">Client Services Group</span> will carefully review your submission
+        and get back to you promptly. Once submitted, a reference number will be sent to your registered
+        email below, which you may use to monitor progress and receive updates.
+      </p>
+      <form class="ct-form">
+
+
+
+
+        <!-- Row 4: Type | Topic -->
+        <div class="ct-row ct-row-2">
+          <ion-select fill="outline" label="Type" label-placement="floating" interface="alert" class="ct-input">
+            <ion-select-option value="complaint">Complaint</ion-select-option>
+            <ion-select-option value="request">Service Request</ion-select-option>
+            <ion-select-option value="inquiry">Inquiry</ion-select-option>
+          </ion-select>
+          <ion-select fill="outline" label="Topic" label-placement="floating" interface="alert" class="ct-input">
+            <ion-select-option value="maintenance">Maintenance</ion-select-option>
+            <ion-select-option value="billing">Billing</ion-select-option>
+            <ion-select-option value="amenity">Amenity</ion-select-option>
+            <ion-select-option value="security">Security</ion-select-option>
+            <ion-select-option value="other">Other</ion-select-option>
+          </ion-select>
+        </div>
+
+        <!-- Concern/Request Description -->
+        <ion-textarea fill="outline" label="Concern/Request Description" label-placement="floating" rows="4"
+          class="ct-input ct-full"></ion-textarea>
+
+
+        <!-- Attachments -->
+        <div class="attachments-section">
+          <p class="attachments-label">Attachments</p>
+          <div class="drop-zone" 
+               (click)="triggerFileInput()" 
+               (drop)="onDrop($event)" 
+               (dragover)="onDragOver($event)" 
+               (dragleave)="onDragLeave($event)" 
+               [class.drag-over]="isDragging">
+            <ion-icon class="fa-solid fa-upload upload-icon"></ion-icon>
+            <p class="drop-title"><strong>Drop files here or click to upload.</strong></p>
+            <p class="drop-sub">Attach any related files to help us process your request faster.</p>
+            <input type="file" #fileInput (change)="onFileSelected($event)" class="file-input" multiple style="display: none;" />
+          </div>
+
+          <!-- Uploaded Files List -->
+          <div class="uploaded-files-preview ion-margin-top" *ngIf="selectedFiles.length > 0">
+            <ion-list lines="full" class="ion-no-padding">
+              <ion-item *ngFor="let file of selectedFiles; let i = index">
+                <ion-icon name="document-text" slot="start" color="medium"></ion-icon>
+                <ion-label>
+                  <h2 style="font-size: 0.95rem; font-weight: 500;">{{ file.name }}</h2>
+                  <p style="font-size: 0.8rem; color: var(--ion-color-medium);">{{ (file.size / 1024 / 1024) | number:'1.2-2' }} MB</p>
+                </ion-label>
+                <ion-button fill="clear" color="danger" slot="end" (click)="removeFile(i); $event.stopPropagation()">
+                  <ion-icon name="trash"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-list>
+          </div>
+        </div>
+
+        <!-- Privacy checkbox -->
+        <div class="privacy-row">
+          <ion-checkbox class="privacy-check"></ion-checkbox>
+          <p class="privacy-text">
+            By checking the box and submitting this ticket, you acknowledge that the personal information
+            provided will be collected, used, and stored for the purpose of assessing and responding to
+            your concern. This information will be handled confidentially and in compliance with applicable
+            privacy and data protection regulations.
+          </p>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="ct-actions">
+          <ion-button fill="solid" color="dark" shape="round" class="btn-cancel">Cancel</ion-button>
+          <ion-button fill="outline" color="green" shape="round" class="btn-submit">
+            <ion-icon class="fa-regular fa-paper-plane" slot="start"></ion-icon>
+            Submit Ticket
+          </ion-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>

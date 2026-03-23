@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-toolbar class="home-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button class="header-icon-btn"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Profile Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="profile-header ion-text-center ion-margin-bottom">
+    <ion-avatar class="profile-avatar">
+      <img [src]="profileImageUrl" alt="Profile" />
+    </ion-avatar>
+    <h2>{{ userName || 'Loading...' }}</h2>
+    <p>{{ userEmail || '...' }}</p>
+    <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;" />
+    <ion-button fill="outline" size="small" shape="round" (click)="isProfileModalOpen = true">Edit Profile</ion-button>
+  </div>
+
+  <ion-list>
+    <ion-item>
+      <ion-icon slot="start" class="fa-solid fa-bell" color="medium"></ion-icon>
+      <ion-label>Notifications</ion-label>
+      <ion-toggle slot="end" checked></ion-toggle>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon slot="start" class="fa-solid fa-fingerprint" color="medium"></ion-icon>
+      <ion-label>Biometric Login</ion-label>
+      <ion-toggle slot="end" [checked]="biometricEnabled" (ionChange)="onBiometricToggle($event)"></ion-toggle>
+    </ion-item>
+
+    <ion-item button id="change-password-trigger">
+      <ion-icon slot="start" class="fa-solid fa-lock" color="medium"></ion-icon>
+      <ion-label>Change Password</ion-label>
+    </ion-item>
+
+    <ion-item button id="help-support-trigger">
+      <ion-icon slot="start" class="fa-solid fa-circle-question" color="medium"></ion-icon>
+      <ion-label>Help & Support</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-modal #passwordModal trigger="change-password-trigger" class="center-modal">
+    <ng-template>
+      <div class="modal-content">
+        <h2 class="ion-text-center">Change Password</h2>
+        <ion-item lines="none">
+          <ion-input label="Current Password" labelPlacement="floating" type="password" placeholder="Enter current password"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input label="New Password" labelPlacement="floating" type="password" placeholder="Enter new password"></ion-input>
+        </ion-item>
+        <div class="ion-padding ion-text-center">
+          <ion-button (click)="passwordModal.dismiss()" expand="block" shape="round">Update</ion-button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal #helpModal trigger="help-support-trigger" class="center-modal">
+    <ng-template>
+      <div class="modal-content ion-text-center">
+        <h2>Help & Support</h2>
+        <p>If you need assistance, please contact the admin team at <br><strong>admin@olihome.com</strong></p>
+        <div class="ion-padding">
+          <ion-button (click)="helpModal.dismiss()" expand="block" shape="round" color="primary">Contact Admin</ion-button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+  <ion-button expand="block" shape="round" color="danger" class="ion-margin-top" routerLink="/login"
+    routerDirection="root">
+    <ion-icon slot="start" class="fa-solid fa-arrow-right-from-bracket"></ion-icon>
+    Log Out
+  </ion-button>
+
+  <ion-modal [isOpen]="isProfileModalOpen" (didDismiss)="isProfileModalOpen = false" class="center-modal">
+    <ng-template>
+      <div class="modal-content ion-text-center">
+        <h2>Update Profile Picture</h2>
+        
+        <div class="ion-padding-bottom">
+          <ion-button expand="block" fill="solid" shape="round" color="primary" (click)="triggerFileInput()">
+            <ion-icon slot="start" class="fa-solid fa-upload"></ion-icon>
+            Upload Photo
+          </ion-button>
+        </div>
+
+        <p class="ion-margin-top" style="color: var(--ion-color-medium); font-size: 0.9rem;">Or choose an avatar</p>
+        
+        <div class="avatar-grid">
+          <ion-avatar *ngFor="let avatar of availableAvatars" (click)="selectAvatar(avatar)" class="selectable-avatar">
+            <img [src]="avatar" />
+          </ion-avatar>
+        </div>
+        <div class="ion-padding-top">
+          <ion-button (click)="isProfileModalOpen = false" expand="block" shape="round" fill="outline">Cancel</ion-button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

@@ -1,0 +1,253 @@
+ion-content {
+  --background: transparent;
+}
+
+.slideshow-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background-color: #257041;
+  overflow: hidden;
+
+  /* 8 layers, each fading in and out seamlessly over a 64s loop */
+  .bg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: fade-slideshow 64s infinite;
+  }
+
+  .bg-1 {
+    background-image: url('../../assets/changer/Artboard%201.png');
+    animation-delay: 0s;
+  }
+
+  .bg-2 {
+    background-image: url('../../assets/changer/Artboard%202.png');
+    animation-delay: 8s;
+  }
+
+  .bg-3 {
+    background-image: url('../../assets/changer/Artboard%203.png');
+    animation-delay: 16s;
+  }
+
+  .bg-4 {
+    background-image: url('../../assets/changer/Artboard%204.png');
+    animation-delay: 24s;
+  }
+
+  .bg-5 {
+    background-image: url('../../assets/changer/Artboard%205.png');
+    animation-delay: 32s;
+  }
+
+  .bg-6 {
+    background-image: url('../../assets/changer/Artboard%206.png');
+    animation-delay: 40s;
+  }
+
+  .bg-7 {
+    background-image: url('../../assets/changer/Artboard%207.png');
+    animation-delay: 48s;
+  }
+
+  .bg-8 {
+    background-image: url('../../assets/changer/Artboard%208.png');
+    animation-delay: 56s;
+  }
+}
+
+@keyframes fade-slideshow {
+  0% {
+    opacity: 0;
+  }
+
+  /* Fades in quickly over ~3s */
+  5% {
+    opacity: 1;
+  }
+
+  /* Holds solid until 10s */
+  15.6% {
+    opacity: 1;
+  }
+
+  /* Starts fading out into the next one */
+  20.6% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.color-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(135, 214, 119, 0.3);
+  /* Subtle green overlay to enrich the green vibe */
+  z-index: 1;
+}
+
+.scroll-container {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.top-logo {
+  text-align: center;
+  margin-bottom: 20px;
+
+  .main-logo-img {
+    width: 150px;
+    max-width: 80%;
+    object-fit: contain;
+  }
+}
+
+.login-card {
+  background: #fdfdfd;
+  border-radius: 12px;
+  padding: 30px 25px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h3 {
+    font-weight: 800;
+    color: #333;
+    font-size: 1.3rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .brand-text {
+    color: #1e703f;
+    font-weight: 800;
+    font-size: 1.4rem;
+
+    .accent {
+      color: #8cc63f;
+    }
+
+    .sub {
+      font-size: 0.7rem;
+      color: #d63384;
+      font-weight: 700;
+      display: block;
+      text-align: right;
+      margin-top: -4px;
+      line-height: 1;
+    }
+  }
+
+  p {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 15px;
+  }
+}
+
+.custom-input {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  border-bottom: 1px solid #dcdcdc;
+  margin-bottom: 25px;
+
+  ion-input {
+    font-size: 0.95rem;
+    color: #333;
+    --placeholder-color: #666;
+    --placeholder-opacity: 0.8;
+  }
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 30px;
+
+  a {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #1e703f;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+.signin-btn {
+  --background: #206d3d;
+  --border-radius: 8px;
+  margin-top: 10px;
+  height: 48px;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+.bottom-section {
+  text-align: center;
+  margin-top: 30px;
+  color: #1e703f;
+
+  .fingerprint-btn {
+    margin-bottom: 25px;
+
+    ion-icon {
+      font-size: 3rem;
+      color: #000;
+    }
+
+    p {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      color: #1e703f;
+    }
+  }
+
+  .footer-links {
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    a {
+      color: #206d3d;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .divider-pipe {
+      margin: 0 10px;
+      color: #888;
+      text-decoration: none;
+      display: inline-block;
+    }
+  }
+}

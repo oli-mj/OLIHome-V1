@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">OLIHome</string>
+    <string name="title_activity_main">OLIHome</string>
+    <string name="package_name">com.olihome.app</string>
+    <string name="custom_url_scheme">com.olihome.app</string>
+</resources>

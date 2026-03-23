@@ -1,0 +1,28 @@
+.menu-toolbar {
+  --background: #32893b;
+  --color: #ffffff;
+  --border-width: 0;
+  --min-height: 90px;
+
+  ion-title {
+    text-align: center;
+    padding: 0;
+  }
+}
+
+.menu-logo {
+  height: 100px;
+  max-width: 200px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+ion-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+  .logout-btn {
+    cursor: pointer;
+    font-weight: 500;
+  }
+}

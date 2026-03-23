@@ -1,0 +1,65 @@
+<ion-content [fullscreen]="true">
+  <!-- Slideshow Background layered properly to prevent flickering -->
+  <div class="slideshow-bg">
+    <div class="bg-layer bg-1"></div>
+    <div class="bg-layer bg-2"></div>
+    <div class="bg-layer bg-3"></div>
+    <div class="bg-layer bg-4"></div>
+    <div class="bg-layer bg-5"></div>
+    <div class="bg-layer bg-6"></div>
+    <div class="bg-layer bg-7"></div>
+    <div class="bg-layer bg-8"></div>
+  </div>
+  <!-- Optional overlay if the images aren't green -->
+  <div class="color-overlay"></div>
+
+  <div class="scroll-container">
+    <!-- Top Main Logo -->
+    <div class="top-logo ion-margin-bottom">
+      <img src="../../assets/oli-logo.png" alt="OliHome Logo" class="main-logo-img" />
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <div class="card-header">
+        <h3>Welcome to <span class="brand-text">OLI<span class="accent">óne</span><br><span
+              class="sub">Home</span></span></h3>
+        <p>Login to your account</p>
+      </div>
+
+      <form class="login-form" #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)">
+        <ion-item lines="none" class="custom-input">
+          <ion-input type="email" name="email" [(ngModel)]="loginData.email" label="Email Address"
+            label-placement="floating" required email></ion-input>
+        </ion-item>
+
+        <ion-item lines="none" class="custom-input">
+          <ion-input type="password" name="password" [(ngModel)]="loginData.password" label="Password"
+            label-placement="floating" required></ion-input>
+        </ion-item>
+
+        <div class="forgot-password">
+          <a>FORGOT PASSWORD?</a>
+        </div>
+
+        <ion-button type="submit" expand="block" shape="round" class="signin-btn" [disabled]="loginForm.invalid">
+          SIGN IN &rarr;
+        </ion-button>
+      </form>
+    </div>
+
+    <!-- Fingerprint & Links -->
+    <div class="bottom-section">
+      <div class="fingerprint-btn" (click)="triggerBiometric()" style="cursor: pointer;">
+        <ion-icon class="fa-solid fa-fingerprint"></ion-icon>
+        <p>Sign in with Fingerprint</p>
+      </div>
+
+      <div class="footer-links">
+        <a routerLink="/privacy-policy">Privacy Policy</a>
+        <span class="divider-pipe">|</span>
+        <a routerLink="/terms">Terms & Conditions</a>
+      </div>
+    </div>
+  </div>
+</ion-content>

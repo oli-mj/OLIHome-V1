@@ -1,0 +1,72 @@
+.profile-header {
+  padding: 20px 0;
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px auto;
+    border: 3px solid var(--ion-color-primary);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin: 5px 0;
+  }
+
+  p {
+    color: #777;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+}
+
+ion-modal.center-modal {
+  --width: 90%;
+  --max-width: 400px;
+  --height: auto;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  align-items: center;
+}
+
+.modal-content {
+  padding: 24px;
+  background: var(--ion-background-color, #ffffff);
+  
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    color: var(--ion-text-color, #333);
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: var(--ion-color-medium);
+    line-height: 1.4;
+  }
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 15px 0;
+  justify-items: center;
+
+  .selectable-avatar {
+    width: 60px;
+    height: 60px;
+    border: 3px solid transparent;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+
+    &:active, &:hover {
+      transform: scale(0.95);
+      border-color: var(--ion-color-primary);
+    }
+  }
+}
