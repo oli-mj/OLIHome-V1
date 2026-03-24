@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Preferences } from '@capacitor/preferences';
 import { BiometricAuth, BiometryError, BiometryErrorType } from '@aparajita/capacitor-biometric-auth';
+import { AlertController } from '@ionic/angular';
 import { AuthService } from '../services/auth/auth.service';
 
 @Component({
@@ -21,7 +22,8 @@ export class LoginPage implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertController: AlertController
   ) { }
 
   async ngOnInit() {
@@ -64,4 +66,49 @@ export class LoginPage implements OnInit {
     }
   }
 
+  async onForgotPassword() {
+    const alert = await this.alertController.create({
+      header: 'Forgot Password',
+      message: 'Enter your email to receive a reset link.',
+      inputs: [
+        {
+          name: 'email',
+          type: 'email',
+          placeholder: 'your-email@example.com',
+          value: this.loginData.email // Pre-fill with existing email if any
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Send Link',
+          handler: async (data) => {
+            if (data.email) {
+              try {
+                const res = await this.authService.forgotPassword(data.email);
+                this.showToast(res.message, 'success');
+              } catch (error) {
+                this.showToast('Could not send reset link. Please try again.', 'danger');
+              }
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  // Helper for showing results
+  private async showToast(message: string, color: string) {
+    const alert = await this.alertController.create({
+      header: color === 'success' ? 'Success' : 'Error',
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
 }

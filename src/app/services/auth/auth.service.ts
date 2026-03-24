@@ -59,6 +59,18 @@ export class AuthService {
     await Preferences.set({ key: 'userData', value: JSON.stringify(user) });
   }
 
+  async forgotPassword(email: string): Promise<any> {
+    try {
+      // Simulation for now - Mj
+      console.log('AuthService: Forgot password logic executing for', email);
+      return {
+        message: `A password reset link has been sent to ${email}`
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async logout(): Promise<void> {
     this.tokenSubject.next(null);
     this.currentUserSubject.next(null);
@@ -78,7 +90,7 @@ export class AuthService {
 
   async updateProfileImage(imageBase64: string): Promise<void> {
     try {
-      // In a real app, this would be an API call
+      // In a real app, this would be an API call and subject to chane later - Mj
       // await lastValueFrom(this.api.post('/user/profile-image', { image: imageBase64 }));
 
       // Update local state if successful

@@ -42,7 +42,7 @@
         </ion-item>
 
         <div class="forgot-password">
-          <a>FORGOT PASSWORD?</a>
+          <a (click)="onForgotPassword()" style="cursor: pointer;">FORGOT PASSWORD?</a>
         </div>
 
         <ion-button type="submit" expand="block" shape="round" class="signin-btn" [disabled]="loginForm.invalid">

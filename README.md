@@ -45,7 +45,7 @@ cd android
 .\gradlew assembleDebug
 
 # 5. Return to the root directory
-cd ..
+cd .. 
 
 # 6. Install the APK on an attached device/emulator
 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
