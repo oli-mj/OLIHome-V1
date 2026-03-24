@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-//import { Preferences } from '@capacitor/preferences';
+// import { Preferences } from '@capacitor/preferences';
 
 @Injectable({
   providedIn: 'root'
