@@ -61,7 +61,7 @@ export class AuthService {
 
   async forgotPassword(email: string): Promise<any> {
     try {
-      // Simulation for now - Mj
+      // Simulation of password for now - Mj
       console.log('AuthService: Forgot password logic executing for', email);
       return {
         message: `A password reset link has been sent to ${email}`
