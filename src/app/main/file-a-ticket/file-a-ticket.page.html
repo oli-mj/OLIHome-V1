@@ -46,7 +46,7 @@
 
     <!-- Ticket cards -->
     <div class="ticket-list" *ngIf="filteredTickets.length > 0">
-      <div class="ticket-card" *ngFor="let ticket of filteredTickets">
+      <div class="ticket-card clickable" *ngFor="let ticket of filteredTickets" (click)="viewTicketDetails(ticket)">
         <div class="ticket-card-top">
           <div class="ticket-info">
             <h3 class="ticket-title">{{ ticket.title }}</h3>

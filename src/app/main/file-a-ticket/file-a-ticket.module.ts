@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { FileATicketPageRoutingModule } from './file-a-ticket-routing.module';
 
 import { FileATicketPage } from './file-a-ticket.page';
+import { TicketDetailModalComponent } from './components/ticket-detail-modal/ticket-detail-modal.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { FileATicketPage } from './file-a-ticket.page';
     IonicModule,
     FileATicketPageRoutingModule
   ],
-  declarations: [FileATicketPage]
+  declarations: [FileATicketPage, TicketDetailModalComponent]
 })
 export class FileATicketPageModule {}

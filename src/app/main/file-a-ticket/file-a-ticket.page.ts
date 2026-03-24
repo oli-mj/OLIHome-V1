@@ -8,6 +8,9 @@ export interface Ticket {
   status: 'Pending' | 'In Progress' | 'Resolved';
 }
 
+import { ModalController } from '@ionic/angular';
+import { TicketDetailModalComponent } from './components/ticket-detail-modal/ticket-detail-modal.component';
+
 @Component({
   selector: 'app-file-a-ticket',
   templateUrl: './file-a-ticket.page.html',
@@ -45,9 +48,20 @@ export class FileATicketPage implements OnInit {
     };
   }
 
-  constructor() { }
+  constructor(private modalCtrl: ModalController) { }
 
   ngOnInit() { }
+
+  async viewTicketDetails(ticket: Ticket) {
+    const modal = await this.modalCtrl.create({
+      component: TicketDetailModalComponent,
+      componentProps: {
+        ticket: ticket
+      },
+      cssClass: 'ticket-details-modal'
+    });
+    return await modal.present();
+  }
 
   onSegmentChange(event: any) {
     this.activeSegment = event.detail.value;

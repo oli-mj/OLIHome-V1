@@ -1,0 +1,57 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Ticket Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon class="fa-solid fa-xmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="modal-container">
+    <div class="status-badge" 
+         [class.pending]="ticket.status === 'Pending'"
+         [class.in-progress]="ticket.status === 'In Progress'"
+         [class.resolved]="ticket.status === 'Resolved'">
+      {{ ticket.status }}
+    </div>
+
+    <h2 class="ticket-title">{{ ticket.title }}</h2>
+    <p class="ticket-id">{{ ticket.id }}</p>
+
+    <div class="info-section">
+      <div class="info-item">
+        <ion-icon class="fa-solid fa-user-tie"></ion-icon>
+        <div class="info-content">
+          <label>Requester Name</label>
+          <p>{{ userName }}</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <ion-icon class="fa-solid fa-envelope"></ion-icon>
+        <div class="info-content">
+          <label>Email Address</label>
+          <p>{{ userEmail }}</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <ion-icon class="fa-solid fa-calendar-days"></ion-icon>
+        <div class="info-content">
+          <label>Date Requested</label>
+          <p>{{ ticket.date }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="description-section">
+      <label>Description</label>
+      <p>{{ ticket.description }}</p>
+    </div>
+  </div>
+</ion-content>
