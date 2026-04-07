@@ -59,33 +59,11 @@
       </div>
 
       <div class="footer-links">
-        <a (click)="openPdfModal('/assets/pdf/privacy-policy.pdf')" style="cursor: pointer;">Privacy Policy</a>
+        <a (click)="openPdfNative('assets/pdf/privacy-policy.pdf')" style="cursor: pointer;">Privacy Policy</a>
         <span class="divider-pipe">|</span>
-        <a (click)="openPdfModal('/assets/pdf/terms-and-conditions.pdf')" style="cursor: pointer;">Terms &
+        <a (click)="openPdfNative('assets/pdf/terms-and-conditions.pdf')" style="cursor: pointer;">Terms &
           Conditions</a>
       </div>
     </div>
   </div>
-
-  <!-- PDF Viewer Modal -->
-  <ion-modal [isOpen]="isPdfModalOpen" (didDismiss)="closePdfModal()">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Document Viewer</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="closePdfModal()">Close</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content style="--background: #f4f5f8;">
-        <!-- Container for Overflow -->
-        <div style="width: 100%; height: 100%; overflow: auto; min-height: 100vh;">
-          <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" 
-            style="width: 100%; height: 100%; border: none;">
-          </iframe>
-        </div>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
 </ion-content>

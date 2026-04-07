@@ -4,8 +4,9 @@ import { NgForm } from '@angular/forms';
 import { Preferences } from '@capacitor/preferences';
 import { BiometricAuth, BiometryError, BiometryErrorType } from '@aparajita/capacitor-biometric-auth';
 import { AlertController } from '@ionic/angular';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AuthService } from '../services/auth/auth.service';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { FileOpener } from '@capawesome-team/capacitor-file-opener';
 
 @Component({
   selector: 'app-login',
@@ -21,15 +22,10 @@ export class LoginPage implements OnInit {
     password: ''
   };
 
-  isPdfModalOpen = false;
-  pdfUrl = '';
-  safePdfUrl: SafeResourceUrl | null = null;
-
   constructor(
     private router: Router,
     private authService: AuthService,
-    private alertController: AlertController,
-    private sanitizer: DomSanitizer
+    private alertController: AlertController
   ) { }
 
   async ngOnInit() {
@@ -118,22 +114,37 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-  // PDF modal handling
-  openPdfModal(url: string) {
-    this.pdfUrl = url;
-    // Appending #toolbar=1 ensures desktop browsers show their native PDF controls
-    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#toolbar=1&navpanes=0&scrollbar=1');
-    this.isPdfModalOpen = true;
-  }
-
-  closePdfModal() {
-    this.isPdfModalOpen = false;
-    this.pdfUrl = '';
-    this.safePdfUrl = null;
-  }
-
-  onPdfError(error: any) {
-    console.error('PDF Load Error:', error);
-    this.showToast('PDF Error: ' + (error?.message || error?.name || JSON.stringify(error)), 'danger');
+  // Native PDF Opener
+  async openPdfNative(url: string) {
+    try {
+      // 1. Fetch the file byte data from local assets folder
+      const response = await fetch(url);
+      const blob = await response.blob();
+      
+      // 2. Transcode blob to Base64 required by Filesystem API
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = async () => {
+        const base64data = reader.result as string;
+        const base64String = base64data.split(',')[1];
+        
+        // 3. Write securely to Cache memory on the Android/iOS filesystem
+        const fileName = url.split('/').pop() || 'document.pdf';
+        const writeResult = await Filesystem.writeFile({
+          path: fileName,
+          data: base64String,
+          directory: Directory.Cache
+        });
+        
+        // 4. Trigger the device's native app prompt immediately over our screen
+        await FileOpener.openFile({
+          path: writeResult.uri,
+          mimeType: 'application/pdf'
+        });
+      };
+    } catch (error: any) {
+      console.error('File Open Error:', error);
+      this.showToast('Could not open document natively.', 'danger');
+    }
   }
 }
