@@ -1,4 +1,4 @@
-# OLIHome for OLIOne
+# OLIHome Mobile of Ovialand
 
 An Ionic/Angular project using Capacitor to deploy on Android, this is subject for further changes and enhancement.
 
