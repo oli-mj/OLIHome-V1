@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Ticket } from '../../file-a-ticket.page';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -10,15 +10,13 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   standalone: false
 })
 export class TicketDetailModalComponent implements OnInit {
+  private modalCtrl = inject(ModalController);
+  private authService = inject(AuthService);
+
   @Input() ticket!: Ticket;
   
   userName: string = '';
   userEmail: string = '';
-
-  constructor(
-    private modalCtrl: ModalController,
-    private authService: AuthService
-  ) {}
 
   async ngOnInit() {
     const userData = await this.authService.getUserData();

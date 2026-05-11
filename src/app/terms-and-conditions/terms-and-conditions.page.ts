@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-terms-and-conditions',
@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./terms-and-conditions.page.scss'],
   standalone: false,
 })
-export class TermsAndConditionsPage implements OnInit {
+export class TermsAndConditionsPage {
 
   constructor() { }
 

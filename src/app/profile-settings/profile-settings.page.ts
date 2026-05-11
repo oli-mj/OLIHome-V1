@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, inject } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { AuthService } from '../services/auth/auth.service';
 import { ToastController, AlertController } from '@ionic/angular';
@@ -12,9 +12,13 @@ import { BiometricAuth } from '@aparajita/capacitor-biometric-auth';
   standalone: false,
 })
 export class ProfileSettingsPage implements OnInit, OnDestroy {
+  private authService = inject(AuthService);
+  private toastCtrl = inject(ToastController);
+  private alertCtrl = inject(AlertController);
+
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
 
-  profileImageUrl: string | ArrayBuffer | null = 'https://i.pravatar.cc/150?u=user1';
+  profileImageUrl: string | ArrayBuffer | null = 'assets/avatars/avatar-1.png';
   biometricEnabled: boolean = false;
   isLoading = true;
 
@@ -23,21 +27,15 @@ export class ProfileSettingsPage implements OnInit, OnDestroy {
 
   isProfileModalOpen = false;
   availableAvatars = [
-    'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
-    'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
-    'https://api.dicebear.com/7.x/avataaars/svg?seed=Jocelyn',
-    'https://api.dicebear.com/7.x/avataaars/svg?seed=Missy',
-    'https://api.dicebear.com/7.x/avataaars/svg?seed=George',
-    'https://api.dicebear.com/7.x/avataaars/svg?seed=Abby'
+    'assets/avatars/avatar-1.png',
+    'assets/avatars/avatar-2.png',
+    'assets/avatars/avatar-3.png',
+    'assets/avatars/avatar-4.png',
+    'assets/avatars/avatar-5.png',
+    'assets/avatars/avatar-6.png',
   ];
 
   private authSub?: Subscription;
-
-  constructor(
-    private authService: AuthService,
-    private toastCtrl: ToastController,
-    private alertCtrl: AlertController
-  ) { }
 
   async ngOnInit() {
     // 1. Subscribe to User Data (Reactive)
@@ -139,21 +137,11 @@ export class ProfileSettingsPage implements OnInit, OnDestroy {
     }
   }
 
-  async showLogoutConfirm() {
-    const alert = await this.alertCtrl.create({
-      header: 'Confirm Logout',
-      message: 'Are you sure you want to log out?',
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        { 
-          text: 'Log Out', 
-          role: 'confirm',
-          handler: () => { this.authService.logout(); }
-        }
-      ]
-    });
-
-    await alert.present();
+  async saveChanges() {
+    // TODO: When backend is ready, send updated profile data via API here.
+    // For now, settings like biometric and profile image are already saved
+    // to device storage as each toggle/selection is made.
+    this.showToast('Changes saved successfully!');
   }
 
   private async showToast(message: string, color: string = 'success') {

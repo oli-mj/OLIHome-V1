@@ -1,4 +1,14 @@
 <ion-app>
+  <!-- Custom Animated Splash Screen -->
+  <div class="custom-splash" *ngIf="showSplash" [class.fade-out]="fadeSplash">
+    <div class="splash-content">
+      <div class="logo-wrapper">
+        <div class="circular-spinner"></div>
+        <img src="assets/oli-logo.png" alt="OliOne Logo" class="splash-logo" />
+      </div>
+    </div>
+  </div>
+
   <!-- Side Menu Setup -->
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
@@ -32,7 +42,7 @@
             </ion-item>
             <ion-item lines="none" routerLink="/data-privacy-policy" routerDirection="root">
               <ion-icon slot="start" class="fa-solid fa-shield-halved"></ion-icon>
-              <ion-label>Data Privacy Policy</ion-label>
+              <ion-label>Privacy Policy</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>

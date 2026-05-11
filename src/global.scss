@@ -50,3 +50,32 @@
 .header-icon-btn {
   --color: #32893b;
 }
+
+/* Global Floating Modal Styles */
+ion-modal.center-modal {
+  --width: 90%;
+  --max-width: 400px;
+  --height: auto;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  align-items: center;
+}
+
+.modal-content {
+  padding: 24px;
+  background: var(--ion-background-color, #ffffff);
+  
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    color: var(--ion-text-color, #333);
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: var(--ion-color-medium);
+    line-height: 1.4;
+  }
+}

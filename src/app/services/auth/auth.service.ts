@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { Preferences } from '@capacitor/preferences';
-import { BehaviorSubject, Observable, lastValueFrom, map, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { User } from '../../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  // NOTE: ApiService is injected and ready for when the backend is connected.
+  private api = inject(ApiService);
+
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -16,7 +19,7 @@ export class AuthService {
 
   private cacheInitialized = false;
 
-  constructor(private api: ApiService) {
+  constructor() {
     this.initCache();
   }
 
@@ -33,42 +36,35 @@ export class AuthService {
   }
 
   async login(email: string, password: string): Promise<{ token: string; user: User }> {
-    try {
-      // Simulation for now
-      console.log('AuthService: Login logic executing');
-      const response = {
-        token: 'fake-jwt-token-123456',
-        user: { name: 'User 01', email: email }
-      };
+    // -----------------------------------------------------------------------
+    // TODO: Replace this placeholder with a real API call once backend is ready.
+    // Example: return await lastValueFrom(this.api.post('/auth/login', { email, password }));
+    // -----------------------------------------------------------------------
+    const displayName = email.split('@')[0]; // Derive a friendly display name from the email
+    const response = {
+      token: 'PLACEHOLDER_TOKEN',
+      user: { name: displayName, email: email }
+    };
 
-      if (response && response.token) {
-        await this.handleAuthSuccess(response.token, response.user);
-      }
-
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    await this.handleAuthSuccess(response.token, response.user);
+    return response;
   }
 
   private async handleAuthSuccess(token: string, user: User): Promise<void> {
     this.tokenSubject.next(token);
     this.currentUserSubject.next(user);
-
     await Preferences.set({ key: 'authToken', value: token });
     await Preferences.set({ key: 'userData', value: JSON.stringify(user) });
   }
 
   async forgotPassword(email: string): Promise<any> {
-    try {
-      // Simulation of password for now - Mj
-      console.log('AuthService: Forgot password logic executing for', email);
-      return {
-        message: `A password reset link has been sent to ${email}`
-      };
-    } catch (error) {
-      throw error;
-    }
+    // -----------------------------------------------------------------------
+    // TODO: Replace this placeholder with a real API call once backend is ready.
+    // Example: return await lastValueFrom(this.api.post('/auth/forgot-password', { email }));
+    // -----------------------------------------------------------------------
+    return {
+      message: `A password reset link has been sent to ${email}.`
+    };
   }
 
   async logout(): Promise<void> {
@@ -89,20 +85,14 @@ export class AuthService {
   }
 
   async updateProfileImage(imageBase64: string): Promise<void> {
-    try {
-      // In a real app, this would be an API call and subject to chane later - Mj
-      // await lastValueFrom(this.api.post('/user/profile-image', { image: imageBase64 }));
-
-      // Update local state if successful
-      const currentUser = this.currentUserSubject.value;
-      if (currentUser) {
-        // Technically image is usually served by a URL, but for demo:
-        // const updatedUser = { ...currentUser, profileImage: imageBase64 };
-        // this.currentUserSubject.next(updatedUser);
-      }
-      console.log('AuthService: Simulated uploading image to backend server...');
-    } catch (error) {
-      throw error;
+    // -----------------------------------------------------------------------
+    // TODO: Replace this placeholder with a real API call once backend is ready.
+    // Example: await lastValueFrom(this.api.post('/user/profile-image', { image: imageBase64 }));
+    // -----------------------------------------------------------------------
+    const currentUser = this.currentUserSubject.value;
+    if (currentUser) {
+      // Profile image is stored locally in device Preferences for now.
+      // When backend is ready, update the user object from the API response instead.
     }
   }
 }

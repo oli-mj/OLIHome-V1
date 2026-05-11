@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Preferences } from '@capacitor/preferences';
@@ -15,18 +15,16 @@ import { FileOpener } from '@capawesome-team/capacitor-file-opener';
   standalone: false,
 })
 export class LoginPage implements OnInit {
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private alertController = inject(AlertController);
+
 
   // Login credentials model
   loginData = {
     email: '',
     password: ''
   };
-
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private alertController: AlertController
-  ) { }
 
   async ngOnInit() {
     const { value } = await Preferences.get({ key: 'biometricEnabled' });

@@ -2,13 +2,14 @@
   --background: #ffffff;
   --color: #32893b;
   --border-width: 0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
   z-index: 10;
 }
 
 .header-icon-btn {
   --color: #32893b;
-  position: relative; /* Badge positioning */
+  position: relative;
+  /* Badge positioning */
 
   ion-icon {
     color: #32893b;
@@ -18,7 +19,7 @@
     position: absolute;
     top: 4px;
     right: 4px;
-    font-size: 9px;
+    font-size: 10px;
     padding: 3px 5px;
     border-radius: 50%;
     z-index: 2;
@@ -43,7 +44,8 @@
 }
 
 /* Base Card Style for modern look */
-ion-card.create-post-card, ion-card.feed-post {
+ion-card.create-post-card,
+ion-card.feed-post {
   margin: 0 0 20px 0;
   border-radius: 20px;
   box-shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
@@ -71,8 +73,9 @@ ion-card.create-post-card, ion-card.feed-post {
     position: relative;
     display: inline-block;
     margin-top: 10px;
-    
-    img, video {
+
+    img,
+    video {
       max-height: 200px;
       border-radius: 16px;
       object-fit: cover;
@@ -84,7 +87,7 @@ ion-card.create-post-card, ion-card.feed-post {
       right: -10px;
       width: 32px;
       height: 32px;
-      --box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
   }
 
@@ -108,7 +111,7 @@ ion-card.create-post-card, ion-card.feed-post {
       border-radius: 50%;
       height: 40px;
       width: 40px;
-      
+
       ion-icon {
         font-size: 1.2rem;
       }
@@ -127,7 +130,7 @@ ion-card.create-post-card, ion-card.feed-post {
   .post-header {
     --inner-padding-end: 0;
     padding-top: 5px;
-    
+
     .author {
       font-weight: 700;
       color: #1f2937;
@@ -144,6 +147,7 @@ ion-card.create-post-card, ion-card.feed-post {
     .more-btn {
       margin: 0;
       --padding-end: 0;
+
       ion-icon {
         font-size: 18px;
         color: #9ca3af;
@@ -187,10 +191,11 @@ ion-card.create-post-card, ion-card.feed-post {
       object-fit: cover;
       display: block;
       border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
-    .video-wrapper, .placeholder-video {
+    .video-wrapper,
+    .placeholder-video {
       position: relative;
     }
 
@@ -207,8 +212,13 @@ ion-card.create-post-card, ion-card.feed-post {
       display: flex;
       justify-content: center;
       align-items: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      ion-icon { font-size: 24px; color: #1f2937; margin-left: 4px; }
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      ion-icon {
+        font-size: 24px;
+        color: #1f2937;
+        margin-left: 4px;
+      }
     }
 
     /* Dot indicators */
@@ -238,7 +248,7 @@ ion-card.create-post-card, ion-card.feed-post {
       position: absolute;
       top: 10px;
       right: 26px;
-      background: rgba(0,0,0,0.50);
+      background: rgba(0, 0, 0, 0.50);
       color: white;
       font-size: 12px;
       font-weight: 700;
@@ -267,13 +277,13 @@ ion-card.create-post-card, ion-card.feed-post {
       --padding-end: 8px;
       --color: #6b7280;
       height: 36px;
-      
+
       ion-icon {
         font-size: 20px;
         margin-right: 6px;
         transition: transform 0.2s ease;
       }
-      
+
       &:active ion-icon {
         transform: scale(0.85);
       }

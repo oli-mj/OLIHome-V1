@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { AuthService } from './services/auth/auth.service';
 import { AlertController } from '@ionic/angular';
@@ -11,16 +11,26 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class AppComponent implements OnInit {
-  constructor(
-    private authService: AuthService,
-    private alertCtrl: AlertController,
-    private router: Router
-  ) {}
+  private authService = inject(AuthService);
+  private alertCtrl = inject(AlertController);
+  private router = inject(Router);
+
+  showSplash = true;
+  fadeSplash = false;
 
   async ngOnInit() {
-    // Hide the splash screen after the app is initialized
-    console.log('Hiding splash screen');
+    // Hide the native splash screen after the app is initialized
+    console.log('Hiding native splash screen');
     await SplashScreen.hide();
+
+    // Trigger custom splash screen fade out after 2.5 seconds
+    setTimeout(() => {
+      this.fadeSplash = true;
+      // Completely remove from DOM after the 600ms fade transition
+      setTimeout(() => {
+        this.showSplash = false;
+      }, 600);
+    }, 2500);
   }
 
   async logout() {

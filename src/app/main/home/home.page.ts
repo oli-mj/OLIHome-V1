@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
 import { AuthService } from '../../services/auth/auth.service';
 import { Preferences } from '@capacitor/preferences';
@@ -30,22 +30,23 @@ export interface Post {
   standalone: false,
 })
 export class HomePage implements OnInit {
+  private authService = inject(AuthService);
+  private actionSheetCtrl = inject(ActionSheetController);
+  private sanitizer = inject(DomSanitizer);
+
   @ViewChild('imageInput', { static: false }) imageInput!: ElementRef;
   @ViewChild('videoInput', { static: false }) videoInput!: ElementRef;
 
   posts: Post[] = [];
 
   currentUser: any;
-  userAvatar: string = 'https://i.pravatar.cc/150?u=user1';
+  // TODO: Replace with a URL returned from the user profile API once the backend is ready.
+  userAvatar: string = 'assets/avatars/avatar-1.png';
 
   newPostContent: string = '';
   newPostMedia: { type: 'image' | 'video', url: string }[] = [];
 
-  notifications = [
-    { id: 1, title: 'Your ticket "Leaking Faucet" status changed to In Progress.', time: '2m ago', icon: 'ticket-outline', color: 'primary', read: false },
-    { id: 2, title: 'User 02 commented on your post.', time: '1h ago', icon: 'chatbubble-outline', color: 'success', read: false },
-    { id: 3, title: 'Maintenance schedule for tomorrow.', time: '1d ago', icon: 'alert-circle-outline', color: 'warning', read: true }
-  ];
+  notifications: any[] = [];
 
   get unreadNotifications() {
     return this.notifications.filter(n => !n.read).length;
@@ -54,12 +55,6 @@ export class HomePage implements OnInit {
   markNotificationsRead() {
     this.notifications.forEach(n => n.read = true);
   }
-
-  constructor(
-    private authService: AuthService, 
-    private actionSheetCtrl: ActionSheetController,
-    private sanitizer: DomSanitizer
-  ) { }
 
   getSafeUrl(url: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(url);
@@ -72,18 +67,18 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     this.currentUser = await this.authService.getUserData();
     if (!this.currentUser) {
-       this.currentUser = { name: 'User 01' }; // Fallback
+      // TODO: Redirect to login page once real session validation is in place.
+      this.currentUser = { name: 'Guest' };
     }
+    // Load locally-stored profile image (persists across sessions)
     const { value: profileImage } = await Preferences.get({ key: 'profileImage' });
-    if(profileImage) this.userAvatar = profileImage;
+    if (profileImage) this.userAvatar = profileImage;
   }
 
   handleRefresh(event: any) {
-    // Simulate a network delay for the UX
     setTimeout(() => {
-      // Future data fetching API call goes here:
+      // TODO: Replace with real API call to refresh the post feed.
       // this.posts = await this.apiService.getFeedPosts();
-      
       event.target.complete();
     }, 1500);
   }
@@ -109,7 +104,7 @@ export class HomePage implements OnInit {
         reader.readAsDataURL(file);
       });
     }
-    input.value = ''; // Reset allows picking same file again immediately
+    input.value = '';
   }
 
   removeMedia(index: number) {
@@ -140,10 +135,7 @@ export class HomePage implements OnInit {
       newPost.media = [...this.newPostMedia];
     }
 
-    // Insert new post at top of feed
     this.posts.unshift(newPost);
-
-    // Reset fields
     this.newPostContent = '';
     this.clearMedia();
   }
@@ -182,7 +174,8 @@ export class HomePage implements OnInit {
   }
 
   sharePost(post: Post) {
-    console.log('Sharing post:', post.id);
+    // TODO: Implement share functionality when backend is connected.
+    console.log('Share post:', post.id);
   }
 
   async openPostOptions(post: Post) {
@@ -192,30 +185,22 @@ export class HomePage implements OnInit {
         {
           text: 'Edit Post',
           icon: 'create-outline',
-          handler: () => {
-            this.startEditPost(post);
-          }
+          handler: () => { this.startEditPost(post); }
         },
         {
           text: 'Save',
           icon: 'save-outline',
-          handler: () => {
-            console.log('Save clicked for post:', post.id);
-          }
+          handler: () => { console.log('TODO: Save post', post.id); }
         },
         {
           text: 'Bookmark',
           icon: 'bookmark-outline',
-          handler: () => {
-            console.log('Bookmark clicked for post:', post.id);
-          }
+          handler: () => { console.log('TODO: Bookmark post', post.id); }
         },
         {
           text: 'Pin',
           icon: 'pin-outline',
-          handler: () => {
-            console.log('Pin clicked for post:', post.id);
-          }
+          handler: () => { console.log('TODO: Pin post', post.id); }
         },
         {
           text: 'Cancel',

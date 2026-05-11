@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject } from '@angular/core';
 
 export interface Ticket {
   id: string;
@@ -17,7 +17,9 @@ import { TicketDetailModalComponent } from './components/ticket-detail-modal/tic
   styleUrls: ['./file-a-ticket.page.scss'],
   standalone: false,
 })
-export class FileATicketPage implements OnInit {
+export class FileATicketPage {
+  private modalCtrl = inject(ModalController);
+
 
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
 
@@ -48,9 +50,7 @@ export class FileATicketPage implements OnInit {
     };
   }
 
-  constructor(private modalCtrl: ModalController) { }
 
-  ngOnInit() { }
 
   async viewTicketDetails(ticket: Ticket) {
     const modal = await this.modalCtrl.create({

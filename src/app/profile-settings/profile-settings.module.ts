@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ProfileSettingsPageRoutingModule } from './profile-settings-routing.module';
 import { ProfileSettingsPage } from './profile-settings.page';
+import { AppHeaderComponent } from '../shared/components/app-header/app-header.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ProfileSettingsPageRoutingModule
+    ProfileSettingsPageRoutingModule,
+    AppHeaderComponent
   ],
   declarations: [ProfileSettingsPage]
 })
