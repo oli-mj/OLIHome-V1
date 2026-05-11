@@ -12,7 +12,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     FormsModule,
     IonicModule,
     LoginPageRoutingModule,
-    PdfViewerModule
+    PdfViewerModule   
   ],
   declarations: [LoginPage]
 })
