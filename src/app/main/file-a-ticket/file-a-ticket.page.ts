@@ -1,15 +1,9 @@
 import { Component, ViewChild, ElementRef, inject } from '@angular/core';
-
-export interface Ticket {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  status: 'Pending' | 'In Progress' | 'Resolved';
-}
-
-import { ModalController } from '@ionic/angular';
+import { ModalController, SegmentChangeEventDetail } from '@ionic/angular';
 import { TicketDetailModalComponent } from './components/ticket-detail-modal/ticket-detail-modal.component';
+import { Ticket } from '../../models/ticket.model';
+import { TopicMap } from '../../models/common.model';
+import { TICKET_STATUS } from '../../constants/app.constants';
 
 @Component({
   selector: 'app-file-a-ticket',
@@ -36,12 +30,12 @@ export class FileATicketPage {
   newTicketDesc: string = '';
   privacyChecked: boolean = false;
 
-  get filteredTickets() {
+  get filteredTickets(): Ticket[] {
     if (this.activeFilter === 'All') return this.tickets;
     return this.tickets.filter(t => t.status === this.activeFilter);
   }
 
-  get counts() {
+  get counts(): { All: number; Pending: number; 'In Progress': number; Resolved: number } {
     return {
       All: this.tickets.length,
       Pending: this.tickets.filter(t => t.status === 'Pending').length,
@@ -63,8 +57,9 @@ export class FileATicketPage {
     return await modal.present();
   }
 
-  onSegmentChange(event: any) {
-    this.activeSegment = event.detail.value;
+  onSegmentChange(event: CustomEvent<SegmentChangeEventDetail>): void {
+    const value = event.detail.value as string;
+    this.activeSegment = value || 'my-tickets';
   }
 
   setFilter(filter: string) {
@@ -115,7 +110,7 @@ export class FileATicketPage {
     if (!this.newTicketTopic || !this.newTicketDesc || !this.privacyChecked) return;
 
     // Convert topics to readable titles
-    const topicMap: any = {
+    const topicMap: TopicMap = {
       'maintenance': 'Maintenance Issue',
       'billing': 'Billing Inquiry',
       'amenity': 'Amenity Request',

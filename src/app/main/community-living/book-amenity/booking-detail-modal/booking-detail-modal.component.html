@@ -1,0 +1,155 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Booking Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="booking; else noBooking">
+    <!-- Status Badge -->
+    <div class="status-container">
+      <ion-badge [color]="getStatusColor(booking.status)">
+        {{ booking.status }}
+      </ion-badge>
+    </div>
+
+    <!-- Booking Information Card -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Booking Information</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <!-- Amenity -->
+          <ion-item>
+            <ion-label>
+              <p class="label-text">Amenity</p>
+              <h3>{{ booking.tenantName }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <!-- Date -->
+          <ion-item>
+            <ion-label>
+              <p class="label-text">Date</p>
+              <h3>{{ formatDate(booking.date) }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <!-- Time Slot -->
+          <ion-item>
+            <ion-label>
+              <p class="label-text">Time Slot</p>
+              <h3>{{ getTimeSlotDisplay() }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <!-- Booking ID -->
+          <ion-item *ngIf="booking.id">
+            <ion-label>
+              <p class="label-text">Booking ID</p>
+              <h3>{{ booking.id }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <!-- Created Date -->
+          <ion-item *ngIf="booking.createdAt">
+            <ion-label>
+              <p class="label-text">Booked On</p>
+              <h3>{{ formatDate(booking.createdAt) }}</h3>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Payment Attachment Section -->
+    <ion-card *ngIf="booking.attachmentUrl">
+      <ion-card-header>
+        <ion-card-title>Payment Attachment</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- Loading State -->
+        <div *ngIf="isLoadingAttachment" class="text-center">
+          <ion-spinner></ion-spinner>
+          <p>Loading attachment...</p>
+        </div>
+
+        <!-- Image Preview -->
+        <div *ngIf="!isLoadingAttachment && isImageAttachment()">
+          <img
+            [src]="attachmentPreview"
+            alt="Payment attachment"
+            class="attachment-image"
+          />
+        </div>
+
+        <!-- PDF Preview -->
+        <div *ngIf="!isLoadingAttachment && isPdfAttachment()" class="pdf-preview">
+          <ion-icon name="document"></ion-icon>
+          <p>PDF Document</p>
+          <p class="file-name">payment-attachment.pdf</p>
+        </div>
+
+        <!-- Generic File Preview -->
+        <div
+          *ngIf="!isLoadingAttachment && !isImageAttachment() && !isPdfAttachment()"
+          class="file-preview"
+        >
+          <ion-icon name="document-attach"></ion-icon>
+          <p>Attachment File</p>
+        </div>
+
+        <!-- Download Button -->
+        <ion-button
+          expand="block"
+          color="primary"
+          (click)="downloadAttachment()"
+          class="ion-margin-top"
+        >
+          <ion-icon name="download" slot="start"></ion-icon>
+          Download
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- No Attachment / Proceed to Payment -->
+    <ion-card *ngIf="!booking.attachmentUrl">
+      <ion-card-header>
+        <ion-card-title>Payment Attachment</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div *ngIf="booking.status === 'APPROVED'" class="text-center">
+          <p class="ion-margin-bottom">Your booking has been approved! Please upload your payment proof to complete the reservation.</p>
+          <ion-button expand="block" color="success" (click)="proceedToPayment()">
+            Proceed to Payment
+          </ion-button>
+        </div>
+        <div *ngIf="booking.status === 'PENDING'" class="text-center no-attachment">
+          <p>Please wait for management approval before making a payment.</p>
+        </div>
+        <div *ngIf="booking.status === 'REJECTED'" class="text-center">
+          <p class="ion-color-danger" style="color: var(--ion-color-danger); font-weight: bold; margin-bottom: 1rem;">
+            Disapproved by Management
+          </p>
+          <ion-button expand="block" fill="outline" color="danger" (click)="closeModal()">
+            Back to Community Living
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Empty State -->
+  <ng-template #noBooking>
+    <div class="empty-state">
+      <ion-icon name="warning"></ion-icon>
+      <p>No booking data available</p>
+    </div>
+  </ng-template>
+</ion-content>

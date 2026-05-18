@@ -1,0 +1,250 @@
+.loading-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+
+  ion-spinner {
+    margin-bottom: 1rem;
+    --color: #0066cc;
+  }
+
+  p {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0.5rem 0;
+
+    &.subtitle {
+      font-size: 0.85rem;
+      color: #999;
+      margin-top: 0.25rem;
+    }
+  }
+}
+
+.empty-state-content {
+  ion-icon {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0.5rem 0;
+  }
+}
+
+.error-state {
+  margin: 1rem 0;
+
+  ion-card {
+    background: #fee2e2;
+    border-left: 4px solid #ef4444;
+
+    ion-card-title {
+      color: #991b1b;
+    }
+
+    p {
+      color: #7f1d1d;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.filter-tabs {
+  margin: 1.5rem -0.5rem 1.5rem -0.5rem;
+  padding-bottom: 1rem;
+  background: #fff;
+  sticky: top;
+  z-index: 10;
+
+  ion-segment {
+    --background: transparent;
+    padding: 0 0.5rem;
+  }
+
+  ion-segment-button {
+    --color: #999;
+    --color-checked: #0066cc;
+    --border-radius: 20px;
+    margin: 0 0.25rem;
+
+    ion-badge {
+      margin-left: 0.5rem;
+      background: #e0e0e0;
+      color: #666;
+    }
+
+    &.segment-button-checked ion-badge {
+      background: #0066cc;
+      color: #fff;
+    }
+  }
+}
+
+.bookings-list {
+  margin-bottom: 2rem;
+}
+
+.booking-card {
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+
+  &:active {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  ion-card-header {
+    padding: 1rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+    border-bottom: 1px solid #e8ecf1;
+  }
+
+  .card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .card-title {
+    flex: 1;
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .booking-id {
+      font-size: 0.8rem;
+      color: #888;
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  ion-badge {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  ion-card-content {
+    padding: 1rem;
+  }
+}
+
+.booking-details {
+  margin-bottom: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  ion-icon {
+    font-size: 1.25rem;
+    color: #666;
+    flex-shrink: 0;
+  }
+
+  .detail-text {
+    flex: 1;
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+
+      &.label {
+        color: #888;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+      }
+
+      &.value {
+        color: #333;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+.tap-hint {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  color: #0066cc;
+  font-size: 0.9rem;
+  padding-top: 0.5rem;
+
+  ion-icon {
+    font-size: 1rem;
+    animation: slide-right 0.5s ease-in-out infinite;
+  }
+}
+
+@keyframes slide-right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+/* Status Badge Colors */
+::ng-deep .badge-warning {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+::ng-deep .badge-success {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+}
+
+::ng-deep .badge-danger {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .card-header-row {
+    flex-direction: column;
+  }
+
+  .filter-tabs ion-segment-button {
+    --padding-bottom: 0.5rem;
+    --padding-top: 0.5rem;
+    font-size: 0.85rem;
+  }
+}

@@ -1,27 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
-import { AuthService } from '../../services/auth/auth.service';
+import { ActionSheetController, RefresherCustomEvent } from '@ionic/angular';
+import { AuthService } from '../../core/services/auth.service';
 import { Preferences } from '@capacitor/preferences';
 import { DomSanitizer, SafeUrl, SafeResourceUrl } from '@angular/platform-browser';
-
-export interface Post {
-  id: string;
-  authorName: string;
-  authorAvatar: string;
-  time: string;
-  content: string;
-  media?: { type: 'image' | 'video', url: string }[];
-  likes: number;
-  comments: number;
-  likedByMe?: boolean;
-  commentsList?: { id: string; authorName: string; authorAvatar: string; text: string; time: string; isEditing?: boolean; editedText?: string; }[];
-  showComments?: boolean;
-  newCommentText?: string;
-  isExpandedMedia?: boolean;
-  isEditingPost?: boolean;
-  editedContent?: string;
-  editedMedia?: { type: 'image' | 'video', url: string }[];
-}
+import { Post, Comment, Media } from '../../models/post.model';
+import { User } from '../../models/user.model';
+import { Notification } from '../../models/common.model';
+import { STORAGE_KEYS } from '../../constants/app.constants';
 
 @Component({
   selector: 'app-home',
@@ -39,20 +24,20 @@ export class HomePage implements OnInit {
 
   posts: Post[] = [];
 
-  currentUser: any;
+  currentUser: User | null = null;
   // TODO: Replace with a URL returned from the user profile API once the backend is ready.
   userAvatar: string = 'assets/avatars/avatar-1.png';
 
   newPostContent: string = '';
-  newPostMedia: { type: 'image' | 'video', url: string }[] = [];
+  newPostMedia: Media[] = [];
 
-  notifications: any[] = [];
+  notifications: Notification[] = [];
 
-  get unreadNotifications() {
+  get unreadNotifications(): number {
     return this.notifications.filter(n => !n.read).length;
   }
 
-  markNotificationsRead() {
+  markNotificationsRead(): void {
     this.notifications.forEach(n => n.read = true);
   }
 
@@ -68,14 +53,14 @@ export class HomePage implements OnInit {
     this.currentUser = await this.authService.getUserData();
     if (!this.currentUser) {
       // TODO: Redirect to login page once real session validation is in place.
-      this.currentUser = { name: 'Guest' };
+      this.currentUser = { name: 'Guest', email: 'guest@example.com' };
     }
     // Load locally-stored profile image (persists across sessions)
-    const { value: profileImage } = await Preferences.get({ key: 'profileImage' });
+    const { value: profileImage } = await Preferences.get({ key: STORAGE_KEYS.PROFILE_IMAGE });
     if (profileImage) this.userAvatar = profileImage;
   }
 
-  handleRefresh(event: any) {
+  handleRefresh(event: RefresherCustomEvent): void {
     setTimeout(() => {
       // TODO: Replace with real API call to refresh the post feed.
       // this.posts = await this.apiService.getFeedPosts();
@@ -122,7 +107,7 @@ export class HomePage implements OnInit {
 
     const newPost: Post = {
       id: Date.now().toString(),
-      authorName: this.currentUser.name,
+      authorName: this.currentUser?.name || 'Anonymous',
       authorAvatar: this.userAvatar,
       time: 'Just now',
       content: this.newPostContent,
@@ -163,7 +148,7 @@ export class HomePage implements OnInit {
 
     post.commentsList.push({
       id: Date.now().toString(),
-      authorName: this.currentUser.name,
+      authorName: this.currentUser?.name || 'Anonymous',
       authorAvatar: this.userAvatar,
       text: post.newCommentText,
       time: 'Just now'
@@ -212,18 +197,18 @@ export class HomePage implements OnInit {
     await actionSheet.present();
   }
 
-  startEditComment(comment: any) {
+  startEditComment(comment: Comment): void {
     comment.isEditing = true;
     comment.editedText = comment.text;
   }
 
-  saveEditComment(comment: any) {
+  saveEditComment(comment: Comment): void {
     if (!comment.editedText || !comment.editedText.trim()) return;
     comment.text = comment.editedText.trim();
     comment.isEditing = false;
   }
 
-  cancelEditComment(comment: any) {
+  cancelEditComment(comment: Comment): void {
     comment.isEditing = false;
   }
 

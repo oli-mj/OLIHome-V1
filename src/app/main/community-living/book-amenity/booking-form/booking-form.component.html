@@ -1,0 +1,196 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="isPaymentUpload ? '/main/community-living/book-amenity/history' : '/main/community-living/book-amenity'"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ isPaymentUpload ? 'Upload Payment' : 'Complete Booking' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="booking-form-container">
+    <!-- Booking Summary Card -->
+    <ion-card class="summary-card">
+      <ion-card-header>
+        <ion-card-title>{{ isPaymentUpload ? 'Booking Details' : 'Booking Summary' }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="summary-row" *ngIf="isPaymentUpload && existingBooking">
+          <span class="summary-label">Amenity:</span>
+          <span class="summary-value">{{ existingBooking.amenityName }}</span>
+        </div>
+        <div class="summary-row" *ngIf="!isPaymentUpload">
+          <span class="summary-label">Amenity:</span>
+          <span class="summary-value">{{ amenity?.name }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Date:</span>
+          <span class="summary-value">{{ formatDate(selectedDate!) }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Time Slot:</span>
+          <span class="summary-value">{{ formatTimeSlot() }}</span>
+        </div>
+        <div *ngIf="isPaymentUpload && existingBooking" class="status-row">
+          <span class="summary-label">Status:</span>
+          <ion-badge color="success">APPROVED</ion-badge>
+        </div>
+        <hr class="ion-margin-y" />
+        <div class="payment-row">
+          <span class="payment-label">Amount Due:</span>
+          <span class="payment-amount">${{ paymentAmount.toFixed(2) }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Booking Form -->
+    <form [formGroup]="bookingForm">
+      <!-- File Upload Section -->
+      <div class="form-section">
+        <h3 class="section-title">Upload Payment Proof</h3>
+        <p class="section-description">
+          Please upload an image or PDF of your payment proof (e.g., screenshot of payment
+          confirmation, receipt)
+        </p>
+
+        <!-- Hidden file input -->
+        <input
+          #fileInput
+          type="file"
+          [accept]="allowedFileTypes"
+          (change)="onFileSelected($event)"
+          style="display: none"
+        />
+
+        <!-- File upload area -->
+        <div class="file-upload-area" (click)="triggerFileInput()" *ngIf="!selectedFile">
+          <ion-icon name="cloud-upload" size="large" color="medium"></ion-icon>
+          <p class="upload-text">Tap to upload or drag and drop</p>
+          <p class="upload-hint">PNG, JPG, JPEG or PDF (Max 10MB)</p>
+        </div>
+
+        <!-- File preview section -->
+        <div class="file-preview-container" *ngIf="selectedFile">
+          <div class="preview-card">
+            <!-- Image preview -->
+            <div *ngIf="isImagePreview()" class="image-preview-wrapper">
+              <img
+                [src]="selectedFile.preview"
+                alt="Payment proof preview"
+                class="image-preview"
+              />
+            </div>
+
+            <!-- PDF preview -->
+            <div *ngIf="isPdfPreview()" class="pdf-preview-wrapper">
+              <ion-icon name="document" size="large" color="primary"></ion-icon>
+              <p>PDF Document</p>
+            </div>
+
+            <!-- File info -->
+            <div class="file-info">
+              <div class="file-details">
+                <p class="file-name">{{ selectedFile.fileName }}</p>
+                <p class="file-size">{{ selectedFile.fileSize }}</p>
+              </div>
+
+              <!-- Remove button -->
+              <ion-button
+                fill="clear"
+                color="danger"
+                size="small"
+                (click)="removeFile()"
+                [disabled]="isSubmitting"
+              >
+                <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+              </ion-button>
+            </div>
+
+            <!-- Change file button -->
+            <ion-button
+              expand="block"
+              fill="outline"
+              size="small"
+              (click)="triggerFileInput()"
+              [disabled]="isSubmitting"
+            >
+              Change File
+            </ion-button>
+          </div>
+        </div>
+
+        <!-- File upload loading -->
+        <div class="upload-loading" *ngIf="isUploading">
+          <ion-spinner></ion-spinner>
+          <p>Processing file...</p>
+        </div>
+      </div>
+
+      <!-- Terms Agreement -->
+      <div class="form-section">
+        <ion-item lines="none">
+          <ion-label class="ion-text-wrap">
+            <p class="terms-text">
+              I agree to the terms and conditions and confirm this payment proof is authentic
+            </p>
+          </ion-label>
+          <ion-checkbox
+            formControlName="agreeToTerms"
+            slot="start"
+            [disabled]="isSubmitting"
+          ></ion-checkbox>
+        </ion-item>
+
+        <div
+          *ngIf="bookingForm.get('agreeToTerms')?.hasError('required') && bookingForm.get('agreeToTerms')?.touched"
+          class="error-message"
+        >
+          <ion-icon name="alert-circle"></ion-icon>
+          <span>You must agree to the terms</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="button-group">
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="cancelBooking()"
+          [disabled]="isSubmitting"
+        >
+          Cancel
+        </ion-button>
+        <ion-button
+          expand="block"
+          color="primary"
+          (click)="submitBooking()"
+          [disabled]="bookingForm.invalid || isSubmitting || isUploading"
+        >
+          <ion-spinner
+            name="crescent"
+            *ngIf="isSubmitting"
+            class="spinner-inline"
+          ></ion-spinner>
+          {{ isSubmitting ? (isPaymentUpload ? 'Uploading...' : 'Submitting...') : (isPaymentUpload ? 'Upload Payment' : 'Submit Booking') }}
+        </ion-button>
+      </div>
+    </form>
+
+    <!-- Additional Info -->
+    <ion-card class="info-card">
+      <ion-card-content>
+        <h4>What happens next?</h4>
+        <ol class="info-list" *ngIf="isPaymentUpload">
+          <li>Your payment proof will be uploaded.</li>
+          <li>Management will verify the payment.</li>
+          <li>Your booking will be fully confirmed once verified.</li>
+        </ol>
+        <ol class="info-list" *ngIf="!isPaymentUpload">
+          <li>Your booking request will be sent to management for approval.</li>
+          <li>Once approved, you can upload your payment proof.</li>
+          <li>You'll receive notification once approved or rejected.</li>
+        </ol>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

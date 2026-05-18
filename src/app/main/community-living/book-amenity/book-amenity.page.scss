@@ -1,0 +1,115 @@
+.book-amenity-container {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .amenity-info {
+    margin-bottom: 2rem;
+
+    ion-card {
+      margin: 0;
+
+      ion-card-content {
+        h2 {
+          margin-top: 0;
+          margin-bottom: 0.5rem;
+          font-size: 1.5rem;
+          color: #1f2937;
+        }
+
+        p {
+          margin: 0.5rem 0;
+          color: #6b7280;
+          font-size: 0.95rem;
+        }
+
+        .location-info {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-top: 1rem;
+          color: #3b82f6;
+          font-size: 0.9rem;
+
+          ion-icon {
+            font-size: 1.2rem;
+          }
+        }
+      }
+    }
+  }
+
+  .calendar-section {
+    margin-bottom: 2rem;
+
+    h3 {
+      margin: 0 0 1rem 0;
+      font-size: 1.25rem;
+      color: #1f2937;
+      font-weight: 600;
+    }
+  }
+
+  .selected-date-info {
+    margin-bottom: 2rem;
+
+    ion-card {
+      margin: 0;
+
+      ion-card-content {
+        .selected-label {
+          margin: 0;
+          font-size: 0.875rem;
+          color: #6b7280;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .selected-value {
+          margin: 0.5rem 0 0 0;
+          font-size: 1.1rem;
+          color: #1f2937;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .instructions {
+    ion-card {
+      margin: 0;
+
+      ion-card-content {
+        h4 {
+          margin: 0 0 1rem 0;
+          font-size: 1rem;
+          color: #1f2937;
+          font-weight: 600;
+        }
+
+        ol {
+          margin: 0;
+          padding-left: 1.5rem;
+
+          li {
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+            line-height: 1.6;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .book-amenity-container {
+    .amenity-info,
+    .calendar-section,
+    .selected-date-info,
+    .instructions {
+      margin-bottom: 1.5rem;
+    }
+  }
+}

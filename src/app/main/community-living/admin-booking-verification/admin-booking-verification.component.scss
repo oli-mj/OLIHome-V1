@@ -1,0 +1,313 @@
+// Loading and empty states
+.state-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  padding: 2rem;
+
+  ion-spinner {
+    margin-bottom: 1rem;
+    --color: var(--ion-color-primary);
+  }
+
+  p {
+    color: #666;
+    font-size: 1rem;
+    text-align: center;
+  }
+}
+
+.error-container {
+  background: #f5f5f5;
+
+  ion-card {
+    width: 100%;
+    margin: 0;
+
+    ion-card-content {
+      padding-top: 1.5rem;
+    }
+  }
+}
+
+// Filter container with segment
+.filter-container {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e5e5;
+  z-index: 10;
+
+  ion-segment {
+    --background: #f5f5f5;
+
+    ion-segment-button {
+      --padding-bottom: 0.5rem;
+      --padding-top: 0.5rem;
+      font-size: 0.85rem;
+
+      &[aria-selected='true'] {
+        --color-checked: var(--ion-color-primary);
+      }
+    }
+  }
+
+  .filter-badge {
+    margin-left: 0.5rem;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+  }
+}
+
+// Bookings list
+.bookings-list {
+  padding: 1rem;
+  padding-top: 0;
+}
+
+// Booking card
+.booking-card {
+  margin: 0.5rem 0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+
+  &:active,
+  &:focus {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  ion-card-header {
+    padding: 1rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+    border-radius: 12px 12px 0 0;
+  }
+
+  .card-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .header-left {
+      flex: 1;
+
+      ion-card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+        margin-bottom: 0.25rem;
+      }
+
+      .amenity-name {
+        font-size: 0.85rem;
+        color: #666;
+        margin: 0;
+      }
+    }
+
+    ion-badge {
+      padding: 0.4rem 0.8rem;
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+  }
+
+  ion-card-content {
+    padding: 1.25rem 1rem;
+  }
+}
+
+// Detail items in card
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  ion-icon {
+    font-size: 1.25rem;
+    color: #666;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .detail-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    span {
+      font-size: 0.95rem;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .attachment-thumbnail {
+      width: 80px;
+      height: 80px;
+      border-radius: 4px;
+      object-fit: cover;
+      margin-top: 0.5rem;
+      border: 1px solid #e5e5e5;
+    }
+  }
+}
+
+// Tap hint
+.tap-hint {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  color: var(--ion-color-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  ion-icon {
+    font-size: 1rem;
+    color: var(--ion-color-primary);
+    animation: slideRight 0.5s infinite;
+  }
+}
+
+// Empty states
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  padding: 2rem;
+  text-align: center;
+
+  ion-icon {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #666;
+    margin: 0;
+  }
+
+  small {
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 0.5rem;
+  }
+}
+
+// Animations
+@keyframes slideRight {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .filter-container {
+    padding: 0.75rem;
+
+    ion-segment {
+      ion-segment-button {
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .bookings-list {
+    padding: 0.75rem;
+  }
+
+  .booking-card {
+    margin: 0.25rem 0;
+
+    ion-card-header {
+      padding: 0.75rem;
+    }
+
+    ion-card-content {
+      padding: 1rem 0.75rem;
+    }
+
+    .card-header-content {
+      gap: 0.75rem;
+
+      .header-left {
+        ion-card-title {
+          font-size: 0.95rem;
+        }
+
+        .amenity-name {
+          font-size: 0.8rem;
+        }
+      }
+
+      ion-badge {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.6rem;
+      }
+    }
+  }
+
+  .detail-item {
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+
+    ion-icon {
+      font-size: 1rem;
+    }
+
+    .detail-text {
+      label {
+        font-size: 0.7rem;
+      }
+
+      span {
+        font-size: 0.9rem;
+      }
+
+      .attachment-thumbnail {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  }
+}

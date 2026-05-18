@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { AuthService } from './services/auth/auth.service';
+import { AuthService } from './core/services/auth.service';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 

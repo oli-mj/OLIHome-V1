@@ -1,0 +1,146 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Review Booking</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Empty State -->
+  <div *ngIf="!booking" class="empty-state">
+    <ion-icon name="warning-outline"></ion-icon>
+    <p>No booking data available</p>
+  </div>
+
+  <!-- Booking Details -->
+  <div *ngIf="booking" class="booking-details">
+    <!-- Status Badge -->
+    <div class="status-container">
+      <ion-badge [color]="getStatusColor(booking.status)" class="large-badge">
+        {{ booking.status }}
+      </ion-badge>
+    </div>
+
+    <!-- Booking Information Card -->
+    <ion-card class="info-card">
+      <ion-card-header>
+        <ion-card-title>Booking Information</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="info-item">
+          <ion-icon name="person-outline"></ion-icon>
+          <div class="info-text">
+            <label>Tenant Name</label>
+            <span>{{ booking.tenantName || 'N/A' }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <ion-icon name="home-outline"></ion-icon>
+          <div class="info-text">
+            <label>Amenity</label>
+            <span>{{ booking.amenityName || 'N/A' }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <div class="info-text">
+            <label>Date</label>
+            <span>{{ formatDate(booking.date) }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <ion-icon name="time-outline"></ion-icon>
+          <div class="info-text">
+            <label>Time Slot</label>
+            <span>{{ getTimeSlotDisplay() }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="booking.id" class="info-item">
+          <ion-icon name="document-outline"></ion-icon>
+          <div class="info-text">
+            <label>Booking ID</label>
+            <span>{{ booking.id }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="booking.createdAt" class="info-item">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <div class="info-text">
+            <label>Submitted</label>
+            <span>{{ formatDate(booking.createdAt) }}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Payment Attachment Card -->
+    <ion-card *ngIf="booking.attachmentUrl" class="attachment-card">
+      <ion-card-header>
+        <ion-card-title>Payment Attachment</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- Loading State -->
+        <div *ngIf="isLoadingAttachment" class="attachment-loading">
+          <ion-spinner></ion-spinner>
+          <p>Loading attachment...</p>
+        </div>
+
+        <!-- Image Preview -->
+        <div *ngIf="!isLoadingAttachment && isImageAttachment()" class="attachment-preview">
+          <img [src]="attachmentPreview" alt="Payment attachment" class="preview-image">
+        </div>
+
+        <!-- PDF Preview -->
+        <div *ngIf="!isLoadingAttachment && isPdfAttachment()" class="attachment-preview pdf-preview">
+          <ion-icon name="document-outline"></ion-icon>
+          <p>PDF Document</p>
+          <small>{{ booking.attachmentUrl.split('/').pop() || 'payment.pdf' }}</small>
+        </div>
+
+        <!-- Generic File Preview -->
+        <div *ngIf="!isLoadingAttachment && !isImageAttachment() && !isPdfAttachment()"
+          class="attachment-preview file-preview">
+          <ion-icon name="document-outline"></ion-icon>
+          <p>File Attachment</p>
+        </div>
+
+        <!-- Download Button -->
+        <ion-button expand="block" color="primary" (click)="downloadAttachment()"
+          class="download-button">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Download Attachment
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- No Attachment -->
+    <ion-card *ngIf="!booking.attachmentUrl" class="attachment-card">
+      <ion-card-content>
+        <p class="no-attachment">No attachment available for this booking</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <ion-button expand="block" color="success" [disabled]="isProcessing"
+        (click)="showApproveConfirmation()">
+        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+        Approve Booking
+      </ion-button>
+
+      <ion-button expand="block" color="danger" [disabled]="isProcessing"
+        (click)="showRejectConfirmation()">
+        <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+        Reject Booking
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

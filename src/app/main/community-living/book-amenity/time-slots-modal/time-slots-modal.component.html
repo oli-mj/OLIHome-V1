@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()" fill="clear">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Select Time Slot</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="time-slots-modal">
+    <!-- Selected date display -->
+    <div class="date-header">
+      <h2>{{ formatDate(selectedDate) }}</h2>
+    </div>
+
+    <!-- Amenity Selector -->
+    <div class="amenity-selector" *ngIf="amenities.length > 0">
+      <ion-segment [value]="amenityId" (ionChange)="onAmenityChanged($event)" scrollable>
+        <ion-segment-button *ngFor="let amenity of amenities" [value]="amenity.id">
+          <ion-label>{{ amenity.name }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading" class="spinner-container">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="errorMessage && !isLoading" class="error-message">
+      <ion-icon name="alert-circle" color="danger"></ion-icon>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <!-- Time slots list -->
+    <div *ngIf="!isLoading && timeSlots.length > 0" class="time-slots-list">
+      <div
+        *ngFor="let slot of timeSlots"
+        class="time-slot-card"
+        [ngClass]="{
+          'slot-booked': slot.isBooked,
+          'slot-available': !slot.isBooked,
+          'slot-selected': selectedSlot?.id === slot.id
+        }"
+        (click)="onSlotClick(slot)"
+      >
+        <div class="slot-content">
+          <div class="slot-time">
+            <span class="time-range">{{ formatTimeSlot(slot) }}</span>
+          </div>
+
+          <div class="slot-details">
+            <!-- Tenant name (only if booked) -->
+            <div *ngIf="slot.isBooked" class="tenant-info">
+              <ion-icon name="person" size="small"></ion-icon>
+              <span>{{ getTenantName(slot) }}</span>
+            </div>
+
+            <!-- Status chip -->
+            <ion-chip
+              [color]="getStatusChip(slot).color"
+              [disabled]="slot.isBooked"
+            >
+              <ion-label>{{ getStatusChip(slot).text }}</ion-label>
+            </ion-chip>
+          </div>
+        </div>
+
+        <!-- Checkmark for selected slot -->
+        <div *ngIf="selectedSlot?.id === slot.id" class="selection-indicator">
+          <ion-icon name="checkmark-circle" color="success"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- No slots available -->
+    <div *ngIf="!isLoading && timeSlots.length === 0" class="no-slots-message">
+      <ion-icon name="calendar" size="large" color="medium"></ion-icon>
+      <p>No time slots available for this date</p>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="footer-actions">
+      <ion-button
+        expand="block"
+        [disabled]="!selectedSlot || isLoading"
+        (click)="confirmSelection()"
+      >
+        {{ isLoading ? 'Sending...' : 'Confirm Selection' }}
+      </ion-button>
+      <ion-button expand="block" fill="outline" (click)="closeModal()">
+        Cancel
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

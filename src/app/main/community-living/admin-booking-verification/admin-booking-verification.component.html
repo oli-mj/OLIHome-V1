@@ -1,0 +1,132 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/main"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Booking Verification</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="state-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading bookings...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Error Loading Bookings</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{ error }}</p>
+        <ion-button expand="block" color="primary" (click)="loadBookings()">
+          <ion-icon name="refresh" slot="start"></ion-icon>
+          Retry
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading && !error">
+    <!-- Pull-to-Refresh -->
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" pullMin="100" pullMax="200">
+      <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Pull to refresh"
+        refreshingSpinner="crescent" refreshingText="Refreshing...">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Status Filter Segment -->
+    <div class="filter-container">
+      <ion-segment [value]="selectedFilter" (ionChange)="changeFilter($any($event.detail.value))">
+        <ion-segment-button value="all">
+          <span>All</span>
+          <ion-badge class="filter-badge">{{ getFilterStats()['all'] }}</ion-badge>
+        </ion-segment-button>
+        <ion-segment-button value="pending">
+          <span>Pending</span>
+          <ion-badge color="warning" class="filter-badge">{{ getFilterStats()['pending'] }}</ion-badge>
+        </ion-segment-button>
+        <ion-segment-button value="approved">
+          <span>Approved</span>
+          <ion-badge color="success" class="filter-badge">{{ getFilterStats()['approved'] }}</ion-badge>
+        </ion-segment-button>
+        <ion-segment-button value="rejected">
+          <span>Rejected</span>
+          <ion-badge color="danger" class="filter-badge">{{ getFilterStats()['rejected'] }}</ion-badge>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <!-- Bookings List -->
+    <div *ngIf="hasBookings() && filteredBookings.length > 0" class="bookings-list">
+      <ion-card *ngFor="let booking of filteredBookings" [button]="true" (click)="openBookingDetail(booking)"
+        class="booking-card">
+        <ion-card-header>
+          <div class="card-header-content">
+            <div class="header-left">
+              <ion-card-title>{{ booking.tenantName || 'Unknown Tenant' }}</ion-card-title>
+              <p class="amenity-name">{{ booking.amenityName || 'N/A' }}</p>
+            </div>
+            <ion-badge [color]="getStatusColor(booking.status)">
+              {{ booking.status }}
+            </ion-badge>
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <!-- Date -->
+          <div class="detail-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <div class="detail-text">
+              <label>Date</label>
+              <span>{{ formatDate(booking.date) }}</span>
+            </div>
+          </div>
+
+          <!-- Time Slot -->
+          <div class="detail-item">
+            <ion-icon name="time-outline"></ion-icon>
+            <div class="detail-text">
+              <label>Time</label>
+              <span>{{ formatTime(booking.startTime) }} – {{ formatTime(booking.endTime) }}</span>
+            </div>
+          </div>
+
+          <!-- Attachment Thumbnail -->
+          <div *ngIf="booking.attachmentUrl" class="detail-item">
+            <ion-icon name="image-outline"></ion-icon>
+            <div class="detail-text">
+              <label>Attachment</label>
+              <img *ngIf="booking.attachmentUrl.includes('image')" [src]="booking.attachmentUrl" 
+                alt="Payment attachment" class="attachment-thumbnail">
+              <span *ngIf="!booking.attachmentUrl.includes('image')">📄 Attachment available</span>
+            </div>
+          </div>
+
+          <!-- Tap Hint -->
+          <div class="tap-hint">
+            <span>Tap to review</span>
+            <ion-icon name="chevron-forward"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- No Results State -->
+    <div *ngIf="hasBookings() && filteredBookings.length === 0" class="empty-state">
+      <ion-icon name="filter-outline"></ion-icon>
+      <p>No {{ selectedFilter }} bookings</p>
+      <small>Try selecting a different filter</small>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!hasBookings()" class="empty-state">
+      <ion-icon name="clipboard-outline"></ion-icon>
+      <p>No Bookings</p>
+      <small>All bookings have been processed</small>
+    </div>
+  </div>
+</ion-content>

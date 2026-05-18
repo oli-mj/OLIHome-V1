@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Ticket } from '../../file-a-ticket.page';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import { Ticket } from '../../../../models/ticket.model';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-ticket-detail-modal',

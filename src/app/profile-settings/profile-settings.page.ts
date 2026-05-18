@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, inject } from '@angular/core';
-import { Preferences } from '@capacitor/preferences';
-import { AuthService } from '../services/auth/auth.service';
-import { ToastController, AlertController } from '@ionic/angular';
+import { AuthService } from '../core/services/auth.service';
+import { ToastService } from '../core/services/toast.service';
+import { PreferencesService } from '../core/services/preferences.service';
+import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { BiometricAuth } from '@aparajita/capacitor-biometric-auth';
 
@@ -13,7 +14,8 @@ import { BiometricAuth } from '@aparajita/capacitor-biometric-auth';
 })
 export class ProfileSettingsPage implements OnInit, OnDestroy {
   private authService = inject(AuthService);
-  private toastCtrl = inject(ToastController);
+  private toastService = inject(ToastService);
+  private preferencesService = inject(PreferencesService);
   private alertCtrl = inject(AlertController);
 
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
@@ -48,13 +50,13 @@ export class ProfileSettingsPage implements OnInit, OnDestroy {
     });
 
     // 2. Load Biometric config
-    const { value: bioValue } = await Preferences.get({ key: 'biometricEnabled' });
-    this.biometricEnabled = bioValue === 'true';
+    const bioEnabled = await this.preferencesService.getBiometricEnabled();
+    this.biometricEnabled = bioEnabled;
 
     // 3. Load Profile Image from local storage if available
-    const { value: imgValue } = await Preferences.get({ key: 'profileImage' });
-    if (imgValue) {
-      this.profileImageUrl = imgValue;
+    const imgUrl = await this.preferencesService.getProfileImage();
+    if (imgUrl) {
+      this.profileImageUrl = imgUrl;
     }
 
     // Simulate initial loading delay for UX demonstration of skeletons
@@ -67,7 +69,7 @@ export class ProfileSettingsPage implements OnInit, OnDestroy {
     this.authSub?.unsubscribe();
   }
 
-  async onBiometricToggle(event: any) {
+  async onBiometricToggle(event: { detail: { checked: boolean } }): Promise<void> {
     const checked = event.detail.checked;
     
     if (checked) {
@@ -76,20 +78,20 @@ export class ProfileSettingsPage implements OnInit, OnDestroy {
         const result = await BiometricAuth.checkBiometry();
         if (result.isAvailable) {
           this.biometricEnabled = true;
-          await Preferences.set({ key: 'biometricEnabled', value: 'true' });
-          this.showToast('Biometric login enabled successfully.');
+          await this.preferencesService.setBiometricEnabled(true);
+          await this.toastService.success('Biometric login enabled successfully.');
         } else {
-          this.showToast('Biometrics not available on this device.', 'warning');
+          await this.toastService.warning('Biometrics not available on this device.');
           this.biometricEnabled = false;
         }
       } catch (err) {
         console.error('Biometric error:', err);
         this.biometricEnabled = false;
-        this.showToast('Failed to enable biometric login.', 'danger');
+        await this.toastService.error('Failed to enable biometric login.');
       }
     } else {
       this.biometricEnabled = false;
-      await Preferences.set({ key: 'biometricEnabled', value: 'false' });
+      await this.preferencesService.setBiometricEnabled(false);
     }
   }
 
@@ -98,14 +100,14 @@ export class ProfileSettingsPage implements OnInit, OnDestroy {
     this.isProfileModalOpen = false;
 
     // Save locally
-    await Preferences.set({ key: 'profileImage', value: url });
+    await this.preferencesService.setProfileImage(url);
 
     // Send to backend
     try {
       await this.authService.updateProfileImage(url);
-      this.showToast('Profile picture updated!');
+      await this.toastService.success('Profile picture updated!');
     } catch (err) {
-      this.showToast('Failed to update avatar.', 'danger');
+      await this.toastService.error('Failed to update avatar.');
     }
   }
 
@@ -123,12 +125,12 @@ export class ProfileSettingsPage implements OnInit, OnDestroy {
       reader.onload = async () => {
         this.profileImageUrl = reader.result;
         if (typeof this.profileImageUrl === 'string') {
-          await Preferences.set({ key: 'profileImage', value: this.profileImageUrl });
+          await this.preferencesService.setProfileImage(this.profileImageUrl);
           try {
             await this.authService.updateProfileImage(this.profileImageUrl);
-            this.showToast('Profile image uploaded successfully.');
+            await this.toastService.success('Profile image uploaded successfully.');
           } catch (err) {
-            this.showToast('Failed to upload image.', 'danger');
+            await this.toastService.error('Failed to upload image.');
           }
         }
       };
@@ -141,16 +143,6 @@ export class ProfileSettingsPage implements OnInit, OnDestroy {
     // TODO: When backend is ready, send updated profile data via API here.
     // For now, settings like biometric and profile image are already saved
     // to device storage as each toggle/selection is made.
-    this.showToast('Changes saved successfully!');
-  }
-
-  private async showToast(message: string, color: string = 'success') {
-    const toast = await this.toastCtrl.create({
-      message,
-      duration: 2000,
-      color,
-      position: 'bottom'
-    });
-    await toast.present();
+    await this.toastService.success('Changes saved successfully!');
   }
 }

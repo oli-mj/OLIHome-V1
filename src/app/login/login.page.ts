@@ -4,7 +4,8 @@ import { NgForm } from '@angular/forms';
 import { Preferences } from '@capacitor/preferences';
 import { BiometricAuth, BiometryError, BiometryErrorType } from '@aparajita/capacitor-biometric-auth';
 import { AlertController } from '@ionic/angular';
-import { AuthService } from '../services/auth/auth.service';
+import { AuthService } from '../core/services/auth.service';
+import { ToastService } from '../core/services/toast.service';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { FileOpener } from '@capawesome-team/capacitor-file-opener';
 
@@ -17,6 +18,7 @@ import { FileOpener } from '@capawesome-team/capacitor-file-opener';
 export class LoginPage implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
   private alertController = inject(AlertController);
 
 
@@ -89,9 +91,9 @@ export class LoginPage implements OnInit {
             if (data.email) {
               try {
                 const res = await this.authService.forgotPassword(data.email);
-                this.showToast(res.message, 'success');
+                await this.toastService.success(res.message);
               } catch (error) {
-                this.showToast('Could not send reset link. Please try again.', 'danger');
+                await this.toastService.error('Could not send reset link. Please try again.');
               }
             }
           }
@@ -102,17 +104,6 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-  // Helper for showing results
-  private async showToast(message: string, color: string) {
-    const alert = await this.alertController.create({
-      header: color === 'success' ? 'Success' : 'Error',
-      message: message,
-      buttons: ['OK']
-    });
-    await alert.present();
-  }
-
-  // Native PDF Opener
   async openPdfNative(url: string) {
     try {
       // 1. Fetch the file byte data from local assets folder
@@ -142,7 +133,7 @@ export class LoginPage implements OnInit {
       };
     } catch (error: any) {
       console.error('File Open Error:', error);
-      this.showToast('Could not open document natively.', 'danger');
+      await this.toastService.error('Could not open document natively.');
     }
   }
 }

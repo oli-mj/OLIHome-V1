@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../environments/environment';
 import { Preferences } from '@capacitor/preferences';
 
 @Injectable({
@@ -27,6 +27,12 @@ export class ApiService {
 
   put<T>(endpoint: string, data: any): Observable<T> {
     return this.http.put<T>(`${this.apiUrl}${endpoint}`, data).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  patch<T>(endpoint: string, data: any): Observable<T> {
+    return this.http.patch<T>(`${this.apiUrl}${endpoint}`, data).pipe(
       catchError(this.handleError)
     );
   }

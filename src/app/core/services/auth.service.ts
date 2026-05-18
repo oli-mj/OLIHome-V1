@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ApiService } from './api.service';
 import { Preferences } from '@capacitor/preferences';
-import { BehaviorSubject, Observable, lastValueFrom, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../../models/user.model';
+import { PasswordResetResponse } from '../../models/api-response.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AuthService {
+  private api = inject(ApiService);
+  
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -16,7 +17,7 @@ export class AuthService {
 
   private cacheInitialized = false;
 
-  constructor(private api: ApiService) {
+  constructor() {
     this.initCache();
   }
 
@@ -57,6 +58,18 @@ export class AuthService {
 
     await Preferences.set({ key: 'authToken', value: token });
     await Preferences.set({ key: 'userData', value: JSON.stringify(user) });
+  }
+
+  async forgotPassword(email: string): Promise<PasswordResetResponse> {
+    // -----------------------------------------------------------------------
+    // TODO: Replace this placeholder with a real API call once backend is ready.
+    // Example: return await lastValueFrom(this.api.post<PasswordResetResponse>('/auth/forgot-password', { email }));
+    // -----------------------------------------------------------------------
+    return {
+      success: true,
+      message: `A password reset link has been sent to ${email}.`,
+      email
+    };
   }
 
   async logout(): Promise<void> {

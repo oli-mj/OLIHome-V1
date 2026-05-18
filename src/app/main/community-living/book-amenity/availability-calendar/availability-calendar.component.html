@@ -1,0 +1,68 @@
+<div class="availability-calendar">
+  <div class="calendar-header">
+    <ion-button fill="clear" size="small" (click)="previousMonth()">
+      <ion-icon slot="start" name="chevron-back"></ion-icon>
+    </ion-button>
+
+    <h3 class="month-year">{{ getMonthName() }} {{ currentYear }}</h3>
+
+    <ion-button fill="clear" size="small" (click)="nextMonth()">
+      <ion-icon slot="end" name="chevron-forward"></ion-icon>
+    </ion-button>
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="spinner-container">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="error-message">
+    <ion-icon name="alert-circle" color="danger"></ion-icon>
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <!-- Calendar -->
+  <div *ngIf="!isLoading" class="calendar">
+    <!-- Week day headers -->
+    <div class="weekday-header">
+      <div *ngFor="let day of weekDays" class="weekday">{{ day }}</div>
+    </div>
+
+    <!-- Calendar days -->
+    <div class="calendar-grid">
+      <div
+        *ngFor="let day of calendarDays"
+        class="day-cell"
+        [ngClass]="getDayStatusClass(day)"
+        [title]="getDayTooltip(day)"
+        (click)="onDayClick(day)"
+        [attr.data-day]="day"
+      >
+        <span class="day-number">{{ day }}</span>
+        <div class="availability-badge" *ngIf="day !== null">
+          <span class="slot-count">{{
+            getAvailabilityStatus(day)?.availableSlots
+          }}</span>
+          <span class="slot-label">/{{ getAvailabilityStatus(day)?.totalSlots }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="calendar-legend">
+    <div class="legend-item">
+      <div class="legend-color available"></div>
+      <span>Available</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color partially-booked"></div>
+      <span>Partially Booked</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color fully-booked"></div>
+      <span>Fully Booked</span>
+    </div>
+  </div>
+</div>
